@@ -16,6 +16,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the internal model that handles the list of subreddits.
         self.model = SubredditModel()
+        self.load()
         self.subredditView.setModel(self.model)
 
         # Connecting buttons to the corresponding functionality.
@@ -47,6 +48,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.timeComboBox.setCurrentIndex(0)
             self.numberSpinBox.setValue(0)
 
+            self.save()
+
     def update_subreddit(self):
         """
         Updates the currently selected subreddit with the current configuration settings in subredditEdit,
@@ -66,6 +69,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_pictures)
             self.model.dataChanged.emit(index, index)
 
+            self.save()
+
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.
@@ -77,6 +82,8 @@ class MainWindow(QtWidgets.QMainWindow):
         if index:
             del self.model.subreddits[index.row()]
             self.model.layoutChanged.emit()
+
+            self.save()
 
     def update_settings(self):
         """
@@ -94,6 +101,21 @@ class MainWindow(QtWidgets.QMainWindow):
             self.subredditEdit.setText(name)
             self.timeComboBox.setCurrentIndex(self.timeComboBox.findText(time_limit))
             self.numberSpinBox.setValue(number_of_pictures)
+
+    def load(self):
+        """
+        Simple function that loads the data from the persistent json file into the internal list model.
+        """
+        with open("subreddits.json", "r") as subreddit_file:
+            data = json.load(subreddit_file)
+            self.model.subreddits = data
+
+    def save(self):
+        """
+        Simple function that saves the current internal list model into the persistent json file.
+        """
+        with open("subreddits.json", "w") as subreddit_file:
+            json.dump(self.model.subreddits, subreddit_file)
 
 
 def main():
