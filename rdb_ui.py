@@ -23,10 +23,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.updateButton.clicked.connect(self.update_subreddit)
         self.deleteButton.clicked.connect(self.delete)
 
-        # Catching other signals
-        self.subredditView.selectionChanged.connect()
-
-        # TODO: Add a helper function that changes the shown configuration when a list item is selected.
+        # Catching other signals.
+        self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
 
     def add(self):
         """
@@ -34,7 +32,20 @@ class MainWindow(QtWidgets.QMainWindow):
         to the internal model with that configuration.
         :return: None
         """
-        pass
+        name = self.subredditEdit.text()
+        time_limit = self.timeComboBox.currentText()
+        number_of_pictures = self.numberSpinBox.value()
+
+        # If there is something to add.
+        if name != "" and number_of_pictures != 0:
+            # Updating the model and emitting that the layout has been changed.
+            self.model.subreddits.append((name, time_limit, number_of_pictures))
+            self.model.layoutChanged.emit()
+
+            # Clearing the configuration settings
+            self.subredditEdit.clear()
+            self.timeComboBox.setCurrentIndex(0)
+            self.numberSpinBox.setValue(0)
 
     def update_subreddit(self):
         """
@@ -42,21 +53,47 @@ class MainWindow(QtWidgets.QMainWindow):
         timeComboBox and numberSpinBox.
         :return: None
         """
-        pass
+        index = self.subredditView.selectedIndexes()[0]
+
+        # If something is selected.
+        if index:
+            # Getting the new configuration settings.
+            new_name = self.subredditEdit.text()
+            new_time_limit = self.timeComboBox.currentText()
+            new_number_of_pictures = self.numberSpinBox.value()
+
+            # Updating the currently selected subreddit and emits the change.
+            self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_pictures)
+            self.model.dataChanged.emit(index, index)
 
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.
         :return: None
         """
-        pass
+        index = self.subredditView.selectedIndexes()[0]
+
+        # If something is selected.
+        if index:
+            del self.model.subreddits[index.row()]
+            self.model.layoutChanged.emit()
 
     def update_settings(self):
         """
         Updates the currently shown configuration settings when a new item is selected in the subredditView.
         :return: None
         """
-        pass
+        index = self.subredditView.selectedIndexes()[0]
+
+        # If something is selected.
+        if index:
+            # Getting the settings for the selected index.
+            name, time_limit, number_of_pictures = self.model.subreddits[index.row()]
+
+            # Setting the shown configuration settings to the settings for the selected index.
+            self.subredditEdit.setText(name)
+            self.timeComboBox.setCurrentIndex(self.timeComboBox.findText(time_limit))
+            self.numberSpinBox.setValue(number_of_pictures)
 
 
 def main():
