@@ -23,6 +23,12 @@
       <height>201</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
    </widget>
    <widget class="QPushButton" name="addButton">
     <property name="geometry">
@@ -78,7 +84,7 @@
      <rect>
       <x>340</x>
       <y>100</y>
-      <width>69</width>
+      <width>81</width>
       <height>22</height>
      </rect>
     </property>
@@ -131,7 +137,7 @@
      <rect>
       <x>340</x>
       <y>160</y>
-      <width>42</width>
+      <width>41</width>
       <height>22</height>
      </rect>
     </property>
