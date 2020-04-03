@@ -35,12 +35,12 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         name = self.subredditEdit.text()
         time_limit = self.timeComboBox.currentText()
-        number_of_pictures = self.numberSpinBox.value()
+        number_of_images = self.numberSpinBox.value()
 
         # If there is something to add.
-        if name != "" and number_of_pictures != 0:
+        if name != "" and number_of_images != 0:
             # Updating the model and emitting that the layout has been changed.
-            self.model.subreddits.append((name, time_limit, number_of_pictures))
+            self.model.subreddits.append((name, time_limit, number_of_images))
             self.model.layoutChanged.emit()
 
             # Clearing the configuration settings
@@ -63,10 +63,10 @@ class MainWindow(QtWidgets.QMainWindow):
             # Getting the new configuration settings.
             new_name = self.subredditEdit.text()
             new_time_limit = self.timeComboBox.currentText()
-            new_number_of_pictures = self.numberSpinBox.value()
+            new_number_of_images = self.numberSpinBox.value()
 
             # Updating the currently selected subreddit and emits the change.
-            self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_pictures)
+            self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_images)
             self.model.dataChanged.emit(index, index)
 
             self.save()
@@ -95,12 +95,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # If something is selected.
         if index:
             # Getting the settings for the selected index.
-            name, time_limit, number_of_pictures = self.model.subreddits[index.row()]
+            name, time_limit, number_of_images = self.model.subreddits[index.row()]
 
             # Setting the shown configuration settings to the settings for the selected index.
             self.subredditEdit.setText(name)
             self.timeComboBox.setCurrentIndex(self.timeComboBox.findText(time_limit))
-            self.numberSpinBox.setValue(number_of_pictures)
+            self.numberSpinBox.setValue(number_of_images)
 
     def load(self):
         """

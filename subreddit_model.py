@@ -1,8 +1,9 @@
+from win32api import GetSystemMetrics
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 import praw
 import json
-import pprint
+import urllib.request
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -48,21 +49,39 @@ class SubredditModel(QtCore.QAbstractListModel):
         the search should be within and the amount of images we should find.
         :return: None
         """
+        # Pulling the information from the configuration to increase readability.
+        name, time_limit, number_of_images = subreddit
+
+        # Converting the time limit into the corresponding time filter that can be used in top().
+        time_limit = self.convert_time_limit(time_limit)
+
         # Getting the secret information for the reddit application from the config file.
         with open("config.json", "r") as config_file:
             config = json.load(config_file)
 
+        # Creating the reddit instance using the secret information.
         reddit = praw.Reddit(client_id=config["client_id"], client_secret=config["client_secret"],
                              user_agent=config["user_agent"])
 
-        subreddit = reddit.subreddit('aww')
+        subreddit = reddit.subreddit(name)
+        image_counter = 0
 
-        for submission in subreddit.hot(limit=10):
+        for submission in subreddit.top(time_filter=time_limit, limit=1000):
+            # Ensuring that we only retrieve the requested amount of images.
+            if image_counter == number_of_images:
+                break
+
+            # Ensuring that we only download images and that the images are hosted on the reddit domain.
             if submission.is_reddit_media_domain and submission.is_video is False:
-                print(submission.preview["images"][0]["source"])
-                print(submission.preview["images"][0]["source"]["width"])
-                print(submission.preview["images"][0]["source"]["height"])
-                print(submission.preview["images"][0]["source"]["url"])
+
+                # Ensuring that the images are large enough to be used as a desktop background.
+                if submission.preview["images"][0]["source"]["width"] > GetSystemMetrics(0) and \
+                        submission.preview["images"][0]["source"]["height"] > GetSystemMetrics(1):
+
+                    # Downloading the image from the url and saving it to the specified folder using its unique name.
+                    urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
+                                               save_path + submission.name + ".jpg")
+                    image_counter += 1
 
     def get_all_images(self, save_path):
         """
@@ -71,7 +90,18 @@ class SubredditModel(QtCore.QAbstractListModel):
         :return: None
         """
 
-
-testing = SubredditModel()
-
-testing.get_images(None, None)
+    @staticmethod
+    def convert_time_limit(time_limit):
+        """
+        Converts the time limit from the combobox into the corresponding internal value that can be used in PRAW.
+        :param time_limit: The time limit that we wish to convert.
+        :return: The value that corresponds to the time_limit argument.
+        """
+        return {
+            "Now": "hour",
+            "Today": "day",
+            "This week": "week",
+            "This month": "month",
+            "This year": "year",
+            "All time": "all"
+        }[time_limit]
