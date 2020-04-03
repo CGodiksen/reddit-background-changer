@@ -89,6 +89,8 @@ class SubredditModel(QtCore.QAbstractListModel):
         :param save_path: The path to the folder in which we save the images.
         :return: None
         """
+        for subreddit in self.subreddits:
+            self.get_images(subreddit, save_path)
 
     @staticmethod
     def convert_time_limit(time_limit):
