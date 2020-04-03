@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 import praw
 import json
 import urllib.request
+import os
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -25,6 +26,7 @@ class SubredditModel(QtCore.QAbstractListModel):
     def data(self, QModelIndex, role=None):
         """
         Returns the data stored under the given role for the item referred to by the index.
+
         :param QModelIndex: The specific index of the model that we wish to extract data for.
         :param role: The specific data that we wish to extract.
         :return: The name of the subreddit if the role is DisplayRole.
@@ -46,6 +48,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         """
         Uses PRAW to get the images from reddit that are described by the specific subreddit configuration. Once gotten
         the function saves them to the specified folder.
+
         :param save_path: The path to the folder in which we save the images.
         :param subreddit: The subreddit configuration that describes the subreddit we should search, the time limit
         the search should be within and the amount of images we should find.
@@ -83,12 +86,13 @@ class SubredditModel(QtCore.QAbstractListModel):
 
                     # Downloading the image from the url and saving it to the specified folder using its unique name.
                     urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
-                                               save_path + submission.name + ".jpg")
+                                               save_path + name + "_" + submission.name + ".jpg")
                     image_counter += 1
 
     def get_all_images(self, save_path):
         """
         Finds the specified images for every subreddit configuration that is currently in the internal list model.
+
         :param save_path: The path to the folder in which we save the images.
         :return: None
         """
@@ -96,9 +100,28 @@ class SubredditModel(QtCore.QAbstractListModel):
             self.get_images(subreddit, save_path)
 
     @staticmethod
+    def delete_images(subreddit, delete_path):
+        """
+        Deletes all images in the folder specified by the delete path that are from the given subreddit.
+
+        :param subreddit: The subreddit configuration which pictures should be removed from the delete path folder.
+        :param delete_path: The folder in which we should delete the picture.
+        :return: None
+        """
+        # Pulling the name from the subreddit configuration.
+        name, _, _ = subreddit
+
+        # Iterating through the files in the delete folder.
+        for filename in os.listdir(delete_path):
+            # If the file is from the given subreddit then we delete it.
+            if filename.startswith(name):
+                os.remove(os.path.join(delete_path, filename))
+
+    @staticmethod
     def convert_time_limit(time_limit):
         """
         Converts the time limit from the combobox into the corresponding internal value that can be used in PRAW.
+
         :param time_limit: The time limit that we wish to convert.
         :return: The value that corresponds to the time_limit argument.
         """

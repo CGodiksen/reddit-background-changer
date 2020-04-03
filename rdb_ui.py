@@ -31,6 +31,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Takes configuration settings in subredditEdit, timeComboBox and numberSpinBox and adds a new subreddit
         to the internal model with that configuration.
+
         :return: None
         """
         name = self.subredditEdit.text()
@@ -57,12 +58,16 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         Updates the currently selected subreddit with the current configuration settings in subredditEdit,
         timeComboBox and numberSpinBox.
+
         :return: None
         """
         index = self.subredditView.selectedIndexes()[0]
 
         # If something is selected.
         if index:
+            # Deleting the images corresponding to the old subreddit configuration from the image folder.
+            self.model.delete_images(self.model.subreddits[index.row()], "images/")
+
             # Getting the new configuration settings.
             new_name = self.subredditEdit.text()
             new_time_limit = self.timeComboBox.currentText()
@@ -72,8 +77,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_images)
             self.model.dataChanged.emit(index, index)
 
-            # TODO: Delete the images corresponding to the old subreddit configuration from the image folder.
-
             # Adding the images corresponding to the updated subreddit to the image folder.
             self.model.get_images((new_name, new_time_limit, new_number_of_images), "images/")
 
@@ -82,22 +85,26 @@ class MainWindow(QtWidgets.QMainWindow):
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.
+
         :return: None
         """
         index = self.subredditView.selectedIndexes()[0]
 
         # If something is selected.
         if index:
+            # Deleting the images corresponding to the deleted subreddit from the image folder.
+            self.model.delete_images(self.model.subreddits[index.row()], "images/")
+
+            # Deleting the subreddit from the internal list model and emitting the layout change.
             del self.model.subreddits[index.row()]
             self.model.layoutChanged.emit()
-
-            # TODO: Delete the images corresponding to the deleted subreddit from the image folder.
 
             self.save()
 
     def update_settings(self):
         """
         Updates the currently shown configuration settings when a new item is selected in the subredditView.
+
         :return: None
         """
         index = self.subredditView.selectedIndexes()[0]
