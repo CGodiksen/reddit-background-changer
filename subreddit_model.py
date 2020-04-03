@@ -33,6 +33,8 @@ class SubredditModel(QtCore.QAbstractListModel):
             name, _, _ = self.subreddits[QModelIndex.row()]
             return "/r/" + name
 
+        # TODO: Insert the subreddit icon before the name in each row.
+
     def rowCount(self, parent=None, *args, **kwargs):
         """
         Simple function that returns the total rowcount of the internal model representation. Since we use a list this
@@ -71,6 +73,7 @@ class SubredditModel(QtCore.QAbstractListModel):
             if image_counter == number_of_images:
                 break
 
+            # TODO: Remove the constraint that limits the images to the reddit domain (Could be problematic).
             # Ensuring that we only download images and that the images are hosted on the reddit domain.
             if submission.is_reddit_media_domain and submission.is_video is False:
 

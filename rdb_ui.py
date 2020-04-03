@@ -48,6 +48,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.timeComboBox.setCurrentIndex(0)
             self.numberSpinBox.setValue(0)
 
+            # Adding the images corresponding to the new subreddit to the image folder.
+            self.model.get_images((name, time_limit, number_of_images), "images/")
+
             self.save()
 
     def update_subreddit(self):
@@ -69,6 +72,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_images)
             self.model.dataChanged.emit(index, index)
 
+            # TODO: Delete the images corresponding to the old subreddit configuration from the image folder.
+
+            # Adding the images corresponding to the updated subreddit to the image folder.
+            self.model.get_images((new_name, new_time_limit, new_number_of_images), "images/")
+
             self.save()
 
     def delete(self):
@@ -82,6 +90,8 @@ class MainWindow(QtWidgets.QMainWindow):
         if index:
             del self.model.subreddits[index.row()]
             self.model.layoutChanged.emit()
+
+            # TODO: Delete the images corresponding to the deleted subreddit from the image folder.
 
             self.save()
 
