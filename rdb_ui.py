@@ -52,6 +52,9 @@ class MainWindow(QtWidgets.QMainWindow):
             # Adding the images corresponding to the new subreddit to the image folder.
             self.model.get_images((name, time_limit, number_of_images), "images/")
 
+            # Adding the subreddit icon to the icon folder.
+            self.model.get_icon(name, "icons/")
+
             self.save()
 
     def update_subreddit(self):
@@ -79,6 +82,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Adding the images corresponding to the updated subreddit to the image folder.
             self.model.get_images((new_name, new_time_limit, new_number_of_images), "images/")
+
+            # Adding the subreddit icon to the icon folder.
+            self.model.get_icon(new_name, "icons/")
 
             self.save()
 

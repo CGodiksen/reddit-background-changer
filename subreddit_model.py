@@ -1,12 +1,15 @@
 from win32api import GetSystemMetrics
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
+from shutil import copyfile
 import praw
 import json
 import urllib.request
 import os
 
 
+# TODO: Remove the ambiguity regarding the different uses of "subreddit".
+# TODO: Remove the icon from the icon folder when we delete the subreddit from the listView.
 class SubredditModel(QtCore.QAbstractListModel):
     """
     Class for creating an abstract list model that is subclassed to support a list of subreddits. This involves saving
@@ -23,6 +26,14 @@ class SubredditModel(QtCore.QAbstractListModel):
         # The internal storage that will store configuration tuples.
         self.subreddits = subreddits or []
 
+        # Getting the secret information for the reddit application from the config file.
+        with open("config.json", "r") as config_file:
+            config = json.load(config_file)
+
+        # Creating the reddit instance using the secret information.
+        self.reddit = praw.Reddit(client_id=config["client_id"], client_secret=config["client_secret"],
+                                  user_agent=config["user_agent"])
+
     def data(self, QModelIndex, role=None):
         """
         Returns the data stored under the given role for the item referred to by the index.
@@ -31,11 +42,19 @@ class SubredditModel(QtCore.QAbstractListModel):
         :param role: The specific data that we wish to extract.
         :return: The name of the subreddit if the role is DisplayRole.
         """
+        name, _, _ = self.subreddits[QModelIndex.row()]
+
         if role == Qt.DisplayRole:
-            name, _, _ = self.subreddits[QModelIndex.row()]
             return "/r/" + name
 
-        # TODO: Insert the subreddit icon before the name in each row.
+        # Inserting the subreddit icon before the name in each row.
+        if role == Qt.DecorationRole:
+            # Iterating through the icons.
+            for filename in os.listdir("icons/"):
+                # When we find the correct icon for the subreddit we return a scaled version.
+                if filename.lower().startswith(name.lower()):
+                    icon = QtGui.QImage("icons/" + filename)
+                    return icon.scaled(25, 25)
 
     def rowCount(self, parent=None, *args, **kwargs):
         """
@@ -60,15 +79,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         # Converting the time limit into the corresponding time filter that can be used in top().
         time_limit = self.convert_time_limit(time_limit)
 
-        # Getting the secret information for the reddit application from the config file.
-        with open("config.json", "r") as config_file:
-            config = json.load(config_file)
-
-        # Creating the reddit instance using the secret information.
-        reddit = praw.Reddit(client_id=config["client_id"], client_secret=config["client_secret"],
-                             user_agent=config["user_agent"])
-
-        subreddit = reddit.subreddit(name)
+        subreddit = self.reddit.subreddit(name)
         image_counter = 0
 
         for submission in subreddit.top(time_filter=time_limit, limit=1000):
@@ -83,7 +94,6 @@ class SubredditModel(QtCore.QAbstractListModel):
                 # Ensuring that the images are large enough to be used as a desktop background.
                 if submission.preview["images"][0]["source"]["width"] > GetSystemMetrics(0) and \
                         submission.preview["images"][0]["source"]["height"] > GetSystemMetrics(1):
-
                     # Downloading the image from the url and saving it to the specified folder using its unique name.
                     urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
                                                save_path + name + "_" + submission.name + ".jpg")
@@ -114,7 +124,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         # Iterating through the files in the delete folder.
         for filename in os.listdir(delete_path):
             # If the file is from the given subreddit then we delete it.
-            if filename.startswith(name):
+            if filename.lower().startswith(name.lower()):
                 os.remove(os.path.join(delete_path, filename))
 
     @staticmethod
@@ -133,3 +143,20 @@ class SubredditModel(QtCore.QAbstractListModel):
             "This year": "year",
             "All time": "all"
         }[time_limit]
+
+    def get_icon(self, name, save_path):
+        """
+        Saves the icon of the given subreddit to the folder specified by the save path argument.
+        :param name: The subreddit that we wish to find the icon of.
+        :param save_path: The folder we should save the icon to.
+        :return: None
+        """
+        subreddit = self.reddit.subreddit(name)
+
+        # If the subreddit has an icon.
+        if subreddit.icon_img != "":
+            # Save the icon to the icons folder.
+            urllib.request.urlretrieve(subreddit.icon_img, save_path + subreddit.display_name + ".png")
+        # If not we just save the subreddit icon as the default icon. We assume the save_path folder has a default icon.
+        else:
+            copyfile(save_path + "default.png", save_path + subreddit.display_name + ".png")
