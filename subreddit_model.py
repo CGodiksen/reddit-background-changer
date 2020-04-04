@@ -8,8 +8,6 @@ import urllib.request
 import os
 
 
-# TODO: Remove the ambiguity regarding the different uses of "subreddit".
-# TODO: Remove the icon from the icon folder when we delete the subreddit from the listView.
 class SubredditModel(QtCore.QAbstractListModel):
     """
     Class for creating an abstract list model that is subclassed to support a list of subreddits. This involves saving
@@ -63,18 +61,18 @@ class SubredditModel(QtCore.QAbstractListModel):
         """
         return len(self.subreddits)
 
-    def get_images(self, subreddit, save_path):
+    def get_images(self, subreddit_config, save_path):
         """
         Uses PRAW to get the images from reddit that are described by the specific subreddit configuration. Once gotten
         the function saves them to the specified folder.
 
         :param save_path: The path to the folder in which we save the images.
-        :param subreddit: The subreddit configuration that describes the subreddit we should search, the time limit
+        :param subreddit_config: The subreddit configuration that describes the subreddit we should search, the time limit
         the search should be within and the amount of images we should find.
         :return: None
         """
         # Pulling the information from the configuration to increase readability.
-        name, time_limit, number_of_images = subreddit
+        name, time_limit, number_of_images = subreddit_config
 
         # Converting the time limit into the corresponding time filter that can be used in top().
         time_limit = self.convert_time_limit(time_limit)
@@ -110,21 +108,18 @@ class SubredditModel(QtCore.QAbstractListModel):
             self.get_images(subreddit, save_path)
 
     @staticmethod
-    def delete_images(subreddit, delete_path):
+    def delete_images(subreddit_name, delete_path):
         """
         Deletes all images in the folder specified by the delete path that are from the given subreddit.
 
-        :param subreddit: The subreddit configuration which pictures should be removed from the delete path folder.
+        :param subreddit_name: The subreddit which pictures should be removed from the delete path folder.
         :param delete_path: The folder in which we should delete the picture.
         :return: None
         """
-        # Pulling the name from the subreddit configuration.
-        name, _, _ = subreddit
-
         # Iterating through the files in the delete folder.
         for filename in os.listdir(delete_path):
             # If the file is from the given subreddit then we delete it.
-            if filename.lower().startswith(name.lower()):
+            if filename.lower().startswith(subreddit_name.lower()):
                 os.remove(os.path.join(delete_path, filename))
 
     @staticmethod
@@ -144,14 +139,14 @@ class SubredditModel(QtCore.QAbstractListModel):
             "All time": "all"
         }[time_limit]
 
-    def get_icon(self, name, save_path):
+    def get_icon(self, subreddit_name, save_path):
         """
         Saves the icon of the given subreddit to the folder specified by the save path argument.
-        :param name: The subreddit that we wish to find the icon of.
+        :param subreddit_name: The subreddit that we wish to find the icon of.
         :param save_path: The folder we should save the icon to.
         :return: None
         """
-        subreddit = self.reddit.subreddit(name)
+        subreddit = self.reddit.subreddit(subreddit_name)
 
         # If the subreddit has an icon.
         if subreddit.icon_img != "":
