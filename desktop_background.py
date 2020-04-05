@@ -8,16 +8,16 @@ from PyQt5.QtCore import QTimer
 
 
 class DesktopBackground:
-    def __init__(self, image_dict, interval):
+    def __init__(self, image_dict, interval=600000):
         # The path to the folder that contains the images that can be picked as the desktop background.
         self.image_dict = image_dict
 
-        # TODO: Make it so the interval can be decided through the UI.
         self.interval = interval
 
+        # Setting up the timer that changes the background to a random picture according to the time interval.
         self.timer = QTimer()
         self.timer.timeout.connect(self.background_changer)
-        self.timer.start(10000)
+        self.timer.start(self.interval)
 
     def background_changer(self):
         """
@@ -47,3 +47,9 @@ class DesktopBackground:
     def resize_image(image, width=GetSystemMetrics(0), height=GetSystemMetrics(1)):
         """Resizes the given image according to the given arguments."""
         return image.resize((width, height))
+
+    def set_interval(self, interval):
+        """Setter function for the interval instance variable that restarts the timer with the new interval."""
+        # Multiplied by 60000 to convert minutes to ms.
+        self.interval = interval * 60000
+        self.timer.start(self.interval)

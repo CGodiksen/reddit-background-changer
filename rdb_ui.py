@@ -28,12 +28,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.updateButton.clicked.connect(self.update_subreddit)
         self.deleteButton.clicked.connect(self.delete)
 
-        # Catching other signals.
+        # Updating the shown subreddit settings in the UI when a subreddit from the listView is selected.
         self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
 
+        # TODO: Make it possible to save settings.
         # Setting up the background changer that will change the background every x seconds, specified by the interval.
-        self.background_changer = DesktopBackground("C:/Users/chris/PycharmProjects/reddit-desktop-background/images/",
-                                                    15)
+        self.background_changer = DesktopBackground("C:/Users/chris/PycharmProjects/reddit-desktop-background/images/")
+
+        # Updating the interval when the change frequency spin box is changed.
+        self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
 
     def add(self):
         """
