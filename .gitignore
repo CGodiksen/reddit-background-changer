@@ -636,5 +636,6 @@ pip-selfcheck.json
 # End of https://www.gitignore.io/api/venv
 subreddits.json
 config.json
+settings.json
 images/
 icons/

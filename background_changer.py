@@ -1,23 +1,26 @@
 import ctypes
 import os
 import random
+import json
 from PIL import Image
 # noinspection PyUnresolvedReferences
 from win32api import GetSystemMetrics
 from PyQt5.QtCore import QTimer
 
 
-class DesktopBackground:
-    def __init__(self, image_dict, interval=600000):
+class BackgroundChanger:
+    def __init__(self, image_dict):
         # The path to the folder that contains the images that can be picked as the desktop background.
         self.image_dict = image_dict
 
-        self.interval = interval
+        # Setting up the settings specific to the functionality that changes the background.
+        self.settings = {}
+        self.load_settings()
 
         # Setting up the timer that changes the background to a random picture according to the time interval.
         self.timer = QTimer()
         self.timer.timeout.connect(self.background_changer)
-        self.timer.start(self.interval)
+        self.timer.start(self.settings["interval"] * 1000)
 
     def background_changer(self):
         """
@@ -48,8 +51,21 @@ class DesktopBackground:
         """Resizes the given image according to the given arguments."""
         return image.resize((width, height))
 
-    def set_interval(self, interval):
+    def set_interval(self, interval_minutes):
         """Setter function for the interval instance variable that restarts the timer with the new interval."""
         # Multiplied by 60000 to convert minutes to ms.
-        self.interval = interval * 60000
-        self.timer.start(self.interval)
+        self.settings["interval"] = interval_minutes
+        self.timer.start(self.settings["interval"] * 1000)
+
+        # Saving the changed settings to the settings file.
+        self.save_settings()
+
+    def load_settings(self):
+        """Loading the settings from the settings file and return the dictionary."""
+        with open("settings.json", "r") as subreddit_file:
+            self.settings = json.load(subreddit_file)
+
+    def save_settings(self):
+        """Saving the settings to the settings file."""
+        with open("settings.json", "w") as subreddit_file:
+            json.dump(self.settings, subreddit_file)

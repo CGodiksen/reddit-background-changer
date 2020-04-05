@@ -2,7 +2,7 @@ import sys
 import json
 from PyQt5 import QtWidgets, uic
 from subreddit_model import SubredditModel
-from desktop_background import DesktopBackground
+from background_changer import BackgroundChanger
 
 
 # TODO: Use concurrency to make the UI responsive even though we are adding images.
@@ -20,7 +20,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the internal model that handles the list of subreddits.
         self.model = SubredditModel()
-        self.load()
+        self.load_subreddits()
         self.subredditView.setModel(self.model)
 
         # Connecting buttons to the corresponding functionality.
@@ -31,9 +31,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Updating the shown subreddit settings in the UI when a subreddit from the listView is selected.
         self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
 
-        # TODO: Make it possible to save settings.
         # Setting up the background changer that will change the background every x seconds, specified by the interval.
-        self.background_changer = DesktopBackground("C:/Users/chris/PycharmProjects/reddit-desktop-background/images/")
+        self.background_changer = BackgroundChanger("C:/Users/chris/PycharmProjects/reddit-desktop-background/images/")
 
         # Updating the interval when the change frequency spin box is changed.
         self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
@@ -66,7 +65,7 @@ class MainWindow(QtWidgets.QMainWindow):
             # Adding the subreddit icon to the icon folder.
             self.model.get_icon(name, "icons/")
 
-            self.save()
+            self.save_subreddits()
 
     def update_subreddit(self):
         """
@@ -100,7 +99,7 @@ class MainWindow(QtWidgets.QMainWindow):
             # Adding the subreddit icon to the icon folder.
             self.model.get_icon(new_name, "icons/")
 
-            self.save()
+            self.save_subreddits()
 
     def delete(self):
         """
@@ -122,7 +121,7 @@ class MainWindow(QtWidgets.QMainWindow):
             del self.model.subreddits[index.row()]
             self.model.layoutChanged.emit()
 
-            self.save()
+            self.save_subreddits()
 
     def update_settings(self):
         """
@@ -142,18 +141,14 @@ class MainWindow(QtWidgets.QMainWindow):
             self.timeComboBox.setCurrentIndex(self.timeComboBox.findText(time_limit))
             self.numberSpinBox.setValue(number_of_images)
 
-    def load(self):
-        """
-        Simple function that loads the data from the persistent json file into the internal list model.
-        """
+    def load_subreddits(self):
+        """Simple function that loads the data from the persistent json file into the internal list model."""
         with open("subreddits.json", "r") as subreddit_file:
             data = json.load(subreddit_file)
             self.model.subreddits = data
 
-    def save(self):
-        """
-        Simple function that saves the current internal list model into the persistent json file.
-        """
+    def save_subreddits(self):
+        """Simple function that saves the current internal list model into the persistent json file."""
         with open("subreddits.json", "w") as subreddit_file:
             json.dump(self.model.subreddits, subreddit_file)
 
