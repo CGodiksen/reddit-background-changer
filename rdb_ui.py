@@ -2,8 +2,12 @@ import sys
 import json
 from PyQt5 import QtWidgets, uic
 from subreddit_model import SubredditModel
+from desktop_background import DesktopBackground
 
 
+# TODO: Use concurrency to make the UI responsive even though we are adding images.
+# TODO: Every 24 hours all images should be refreshed to avoid "dead" images that no longer fit the configuration.
+# TODO: The app should run on startup and run in the background.
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for creating the main window that our reddit desktop background desktop app will run in.
@@ -26,6 +30,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Catching other signals.
         self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
+
+        # Setting up the background changer that will change the background every x seconds, specified by the interval.
+        self.background_changer = DesktopBackground("C:/Users/chris/PycharmProjects/reddit-desktop-background/images/",
+                                                    15)
 
     def add(self):
         """
