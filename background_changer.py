@@ -33,6 +33,7 @@ class BackgroundChanger:
         background_name = random.choice(os.listdir(self.image_dict))
 
         background_image = Image.open(self.image_dict + background_name)
+
         # Resizing the image so it fits the desktop size.
         resized_background_image = self.resize_image(background_image)
 
@@ -45,11 +46,14 @@ class BackgroundChanger:
 
         ctypes.windll.user32.SystemParametersInfoW(20, 0, self.image_dict + "background.jpg", 0)
 
-    # TODO: Make it so we resize through scaling instead of forcing width and height.
     @staticmethod
-    def resize_image(image, width=GetSystemMetrics(0), height=GetSystemMetrics(1)):
-        """Resizes the given image according to the given arguments."""
-        return image.resize((width, height))
+    def resize_image(image, desktop_width=GetSystemMetrics(0), desktop_height=GetSystemMetrics(1)):
+        """Resizes the given image according to the resolution of the desktop."""
+        # Calculating the ratio that we resize based upon by finding the aspect that needs to be scaled the most.
+        image_width, image_height = image.size
+        resize_ratio = min(desktop_width/image_width, desktop_height/image_height)
+
+        return image.resize((int(image_width * resize_ratio), int(image_height * resize_ratio)))
 
     def set_interval(self, interval_minutes):
         """Setter function for the interval instance variable that restarts the timer with the new interval."""

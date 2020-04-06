@@ -6,7 +6,7 @@ from background_changer import BackgroundChanger
 
 
 # TODO: Use concurrency to make the UI responsive even though we are adding images.
-# TODO: Every 24 hours all images should be refreshed to avoid "dead" images that no longer fit the configuration.
+# TODO: All images could be refreshed on startup to avoid "dead" images that no longer fit the configuration.
 # TODO: The app should run on startup and run in the background.
 class MainWindow(QtWidgets.QMainWindow):
     """
