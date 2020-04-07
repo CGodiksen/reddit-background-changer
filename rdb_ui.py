@@ -1,11 +1,12 @@
 import sys
 import json
+from PyQt5.QtCore import QThreadPool
 from PyQt5 import QtWidgets, uic
 from subreddit_model import SubredditModel
 from background_changer import BackgroundChanger
+from worker import Worker
 
 
-# TODO: Use concurrency to make the UI responsive even though we are adding images.
 # TODO: All images could be refreshed on startup to avoid "dead" images that no longer fit the configuration.
 # TODO: The app should run on startup and run in the background.
 class MainWindow(QtWidgets.QMainWindow):
@@ -37,6 +38,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Updating the interval when the change frequency spin box is changed.
         self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
 
+        # Setting up the thread pool that will handle the threads that are created when getting images.
+        self.threadpool = QThreadPool()
+
     def add(self):
         """
         Takes configuration settings in subredditEdit, timeComboBox and numberSpinBox and adds a new subreddit
@@ -60,7 +64,9 @@ class MainWindow(QtWidgets.QMainWindow):
             self.numberSpinBox.setValue(0)
 
             # Adding the images corresponding to the new subreddit to the image folder.
-            self.model.get_images((name, time_limit, number_of_images), "images/")
+            # This is done in a new thread to ensure that the GUI is responsive even when getting images.
+            worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "images/")
+            self.threadpool.start(worker)
 
             # Adding the subreddit icon to the icon folder.
             self.model.get_icon(name, "icons/")
@@ -74,7 +80,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         :return: None
         """
-        index = self.subredditView.selectedIndexes()[0]
+        # Ensuring that we don't crash if no index is selected.
+        try:
+            index = self.subredditView.selectedIndexes()[0]
+        except Exception as e:
+            print(e)
+            return
 
         # If something is selected.
         if index:
@@ -93,8 +104,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_images)
             self.model.dataChanged.emit(index, index)
 
-            # Adding the images corresponding to the updated subreddit to the image folder.
-            self.model.get_images((new_name, new_time_limit, new_number_of_images), "images/")
+            # Adding the images corresponding to the new subreddit to the image folder.
+            # This is done in a new thread to ensure that the GUI is responsive even when getting images.
+            worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "images/")
+            self.threadpool.start(worker)
 
             # Adding the subreddit icon to the icon folder.
             self.model.get_icon(new_name, "icons/")

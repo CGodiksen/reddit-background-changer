@@ -29,16 +29,21 @@ class BackgroundChanger:
         :return: None
         """
         # TODO: Maybe implement a system to ensure equal distribution of picks.
-        # Choosing a random picture from the folder containing all possible backgrounds.
-        background_name = random.choice(os.listdir(self.image_dict))
+        # TODO: Make this try expect a tad more specific.
+        try:
+            # Choosing a random picture from the folder containing all possible backgrounds.
+            background_name = random.choice(os.listdir(self.image_dict))
+            background_image = Image.open(self.image_dict + background_name)
 
-        background_image = Image.open(self.image_dict + background_name)
+            # Resizing the image so it fits the desktop size.
+            resized_background_image = self.resize_image(background_image)
 
-        # Resizing the image so it fits the desktop size.
-        resized_background_image = self.resize_image(background_image)
+            resized_background_image = resized_background_image.convert("RGB")
 
-        # Setting the background
-        self.set_background(resized_background_image)
+            # Setting the background
+            self.set_background(resized_background_image)
+        except:
+            pass
 
     def set_background(self, image):
         """Sets the desktop background to the given image."""
@@ -51,7 +56,7 @@ class BackgroundChanger:
         """Resizes the given image according to the resolution of the desktop."""
         # Calculating the ratio that we resize based upon by finding the aspect that needs to be scaled the most.
         image_width, image_height = image.size
-        resize_ratio = min(desktop_width/image_width, desktop_height/image_height)
+        resize_ratio = min(desktop_width / image_width, desktop_height / image_height)
 
         return image.resize((int(image_width * resize_ratio), int(image_height * resize_ratio)))
 
