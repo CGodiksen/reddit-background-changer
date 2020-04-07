@@ -29,7 +29,7 @@ class BackgroundChanger:
         :return: None
         """
         # TODO: Maybe implement a system to ensure equal distribution of picks.
-        # TODO: Make this try expect a tad more specific.
+        # Wrapping in a try-except to handle invalid/broken images.
         try:
             # Choosing a random picture from the folder containing all possible backgrounds.
             background_name = random.choice(os.listdir(self.image_dict))
@@ -38,12 +38,10 @@ class BackgroundChanger:
             # Resizing the image so it fits the desktop size.
             resized_background_image = self.resize_image(background_image)
 
-            resized_background_image = resized_background_image.convert("RGB")
-
             # Setting the background
-            self.set_background(resized_background_image)
-        except:
-            pass
+            self.set_background(resized_background_image.convert("RGB"))
+        except Exception as e:
+            print("Background changer: " + str(e))
 
     def set_background(self, image):
         """Sets the desktop background to the given image."""

@@ -80,11 +80,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         :return: None
         """
-        # Ensuring that we don't crash if no index is selected.
+        # Ensuring that we do not crash if no index is selected.
         try:
             index = self.subredditView.selectedIndexes()[0]
         except Exception as e:
-            print(e)
+            print("Update button: " + str(e))
             return
 
         # If something is selected.
@@ -120,7 +120,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         :return: None
         """
-        index = self.subredditView.selectedIndexes()[0]
+        # Ensuring that we don't crash if no index is selected.
+        try:
+            index = self.subredditView.selectedIndexes()[0]
+        except Exception as e:
+            print("Delete button: " + str(e))
+            return
 
         # If something is selected.
         if index:
