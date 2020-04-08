@@ -2,6 +2,8 @@ import sys
 import json
 from PyQt5.QtCore import QThreadPool
 from PyQt5 import QtWidgets, uic, QtGui
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from subreddit_model import SubredditModel
 from background_changer import BackgroundChanger
 from worker import Worker
@@ -177,7 +179,28 @@ class MainWindow(QtWidgets.QMainWindow):
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('reddit_icon.PNG'))
+
+    # Ensuring that we do not stop the application when the main window is closed.
+    app.setQuitOnLastWindowClosed(False)
+
     main = MainWindow()
+
+    # TODO: Handle the system tray functionality in a more appropriate place.
+    # Setting up the system tray functionality.
+    tray = QSystemTrayIcon()
+    tray.setIcon(QIcon("reddit_icon.PNG"))
+    tray.setVisible(True)
+
+    # Create the menu
+    menu = QMenu()
+    change_background_action = QAction("Change background")
+    # TODO: Potential problem here. The function does not restart the timer.
+    change_background_action.triggered.connect(main.background_changer.background_changer)
+    menu.addAction(change_background_action)
+
+    # Add the menu to the tray
+    tray.setContextMenu(menu)
+
     main.show()
     sys.exit(app.exec_())
 
