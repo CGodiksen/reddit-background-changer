@@ -1,7 +1,7 @@
 import sys
 import json
 from PyQt5.QtCore import QThreadPool
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtGui
 from subreddit_model import SubredditModel
 from background_changer import BackgroundChanger
 from worker import Worker
@@ -9,6 +9,9 @@ from worker import Worker
 
 # TODO: All images could be refreshed on startup to avoid "dead" images that no longer fit the configuration.
 # TODO: The app should run on startup and run in the background.
+# TODO: The app should be minimized to the system tray.
+# TODO: Add a way to manually set a new random background through the system tray.
+# TODO: Add an icon to the application that can also be used for the system tray.
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for creating the main window that our reddit desktop background desktop app will run in.
@@ -173,6 +176,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
+    app.setWindowIcon(QtGui.QIcon('reddit_icon.PNG'))
     main = MainWindow()
     main.show()
     sys.exit(app.exec_())

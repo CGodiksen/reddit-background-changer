@@ -5,7 +5,7 @@ class Worker(QRunnable):
     """
     Class that defines the behavior of a worker that can a function in a separate thread.
 
-    Inherits from QRunnable to handler worker thread setup, signals and wrap-up.
+    Inherits from QRunnable to handler worker thread setup.
     """
     def __init__(self, function, *args, **kwargs):
         super(Worker, self).__init__()
