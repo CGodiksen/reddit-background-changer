@@ -7,6 +7,7 @@ from subreddit_model import SubredditModel
 from worker import Worker
 
 
+# TODO: The main window should be minimized to the system tray.
 class MainWindow(QtWidgets.QMainWindow):
     """
     Class for creating the main window that our reddit desktop background desktop app will run in.

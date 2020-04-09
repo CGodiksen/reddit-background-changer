@@ -9,9 +9,7 @@ from system_tray import SystemTray
 
 # TODO: All images could be refreshed on startup to avoid "dead" images that no longer fit the configuration.
 # TODO: The app should run on startup and run in the background.
-# TODO: Rename this file.
 # TODO: Add the folder structure to github.
-# TODO: Add a requirements file.
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))
@@ -23,7 +21,7 @@ def main():
     background_changer = BackgroundChanger("C:/Users/chris/PycharmProjects/reddit-desktop-background/data/images/")
 
     main_window = MainWindow(background_changer)
-    system_tray = SystemTray(background_changer)
+    system_tray = SystemTray(background_changer, main_window, app)
 
     main_window.show()
     sys.exit(app.exec_())
