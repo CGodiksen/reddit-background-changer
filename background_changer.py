@@ -31,8 +31,8 @@ class BackgroundChanger:
         # TODO: Maybe implement a system to ensure equal distribution of picks.
         # Wrapping in a try-except to handle invalid/broken images.
         try:
-            # Choosing a random picture from the folder containing all possible backgrounds.
-            background_name = random.choice(os.listdir(self.image_dict))
+            # Choosing a random .jpg image from the folder containing all possible backgrounds.
+            background_name = random.choice([file for file in os.listdir(self.image_dict) if file.endswith(".jpg")])
             background_image = Image.open(self.image_dict + background_name)
 
             # Resizing the image so it fits the desktop size.

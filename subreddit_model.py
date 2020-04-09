@@ -154,4 +154,4 @@ class SubredditModel(QtCore.QAbstractListModel):
             urllib.request.urlretrieve(subreddit.icon_img, save_path + subreddit.display_name + ".png")
         # If not we just save the subreddit icon as the default icon. We assume the save_path folder has a default icon.
         else:
-            copyfile(save_path + "default.png", save_path + subreddit.display_name + ".png")
+            copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")

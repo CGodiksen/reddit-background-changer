@@ -112,6 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.save_subreddits()
 
+    # TODO: Fix. The app crashes when you delete while images are being added.
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.

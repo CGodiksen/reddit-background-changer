@@ -639,3 +639,5 @@ configuration/reddit_config.json
 data/app_settings.json
 data/images/
 data/icons/
+!data/images/README.md
+!data/icons/README.md
