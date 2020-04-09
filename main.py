@@ -11,6 +11,7 @@ from system_tray import SystemTray
 # TODO: The app should run on startup and run in the background.
 # TODO: Rename this file.
 # TODO: Add the folder structure to github.
+# TODO: Add a requirements file.
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))
