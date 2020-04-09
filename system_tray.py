@@ -20,6 +20,11 @@ class SystemTray:
         # Creating the menu.
         self.menu = QMenu()
 
+        # Opening the main window when the tray icon is double clicked. We only want to call show() if the activation
+        # reason is 2, meaning that the icon was double clicked.
+        self.tray.activated.connect(
+            lambda activation_reason: self.main_window.show() if activation_reason == 2 else None)
+
         # Creating an action that opens the main window.
         self.open_window_action = QAction("Open")
         self.open_window_action.triggered.connect(self.main_window.show)
