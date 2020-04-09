@@ -15,7 +15,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi('mainwindow.ui', self)
+        uic.loadUi("resources/mainwindow.ui", self)
 
         # Setting up the internal model that handles the list of subreddits.
         self.model = SubredditModel()

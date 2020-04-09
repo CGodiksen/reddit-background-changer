@@ -14,7 +14,7 @@ from system_tray import SystemTray
 # TODO: Put all the json files in a folder containing data about the application.
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    app.setWindowIcon(QtGui.QIcon('reddit_icon.PNG'))
+    app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))
 
     # Ensuring that we do not stop the application when the main window is closed.
     app.setQuitOnLastWindowClosed(False)
