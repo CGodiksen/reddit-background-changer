@@ -63,11 +63,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Adding the images corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
-            worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "images/")
+            worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "data/images/")
             self.threadpool.start(worker)
 
             # Adding the subreddit icon to the icon folder.
-            self.model.get_icon(name, "icons/")
+            self.model.get_icon(name, "data/icons/")
 
             self.save_subreddits()
 
@@ -88,10 +88,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # If something is selected.
         if index:
             # Deleting the images corresponding to the old subreddit configuration from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "images/")
+            self.model.delete_images(self.model.subreddits[index.row()][0], "data/images/")
 
             # Deleting the icon corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "icons/")
+            self.model.delete_images(self.model.subreddits[index.row()][0], "data/icons/")
 
             # Getting the new configuration settings.
             new_name = self.subredditEdit.text()
@@ -104,11 +104,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Adding the images corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
-            worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "images/")
+            worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "data/images/")
             self.threadpool.start(worker)
 
             # Adding the subreddit icon to the icon folder.
-            self.model.get_icon(new_name, "icons/")
+            self.model.get_icon(new_name, "data/icons/")
 
             self.save_subreddits()
 
@@ -128,10 +128,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # If something is selected.
         if index:
             # Deleting the images corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "images/")
+            self.model.delete_images(self.model.subreddits[index.row()][0], "data/images/")
 
             # Deleting the icon corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "icons/")
+            self.model.delete_images(self.model.subreddits[index.row()][0], "data/icons/")
 
             # Deleting the subreddit from the internal list model and emitting the layout change.
             del self.model.subreddits[index.row()]
@@ -159,11 +159,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_subreddits(self):
         """Simple function that loads the data from the persistent json file into the internal list model."""
-        with open("subreddits.json", "r") as subreddit_file:
+        with open("data/subreddits.json", "r") as subreddit_file:
             data = json.load(subreddit_file)
             self.model.subreddits = data
 
     def save_subreddits(self):
         """Simple function that saves the current internal list model into the persistent json file."""
-        with open("subreddits.json", "w") as subreddit_file:
+        with open("data/subreddits.json", "w") as subreddit_file:
             json.dump(self.model.subreddits, subreddit_file)

@@ -25,7 +25,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.subreddits = subreddits or []
 
         # Getting the secret information for the reddit application from the config file.
-        with open("config.json", "r") as config_file:
+        with open("configuration/reddit_config.json", "r") as config_file:
             config = json.load(config_file)
 
         # Creating the reddit instance using the secret information.
@@ -48,10 +48,10 @@ class SubredditModel(QtCore.QAbstractListModel):
         # Inserting the subreddit icon before the name in each row.
         if role == Qt.DecorationRole:
             # Iterating through the icons.
-            for filename in os.listdir("icons/"):
+            for filename in os.listdir("data/icons/"):
                 # When we find the correct icon for the subreddit we return a scaled version.
                 if filename.lower().startswith(name.lower()):
-                    icon = QtGui.QImage("icons/" + filename)
+                    icon = QtGui.QImage("data/icons/" + filename)
                     return icon.scaled(25, 25)
 
     def rowCount(self, parent=None, *args, **kwargs):

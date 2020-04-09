@@ -634,8 +634,8 @@ venv.bak/
 pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/venv
-subreddits.json
-config.json
-settings.json
-images/
-icons/
+data/subreddits.json
+configuration/reddit_config.json
+data/app_settings.json
+data/images/
+data/icons/
