@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         uic.loadUi("resources/mainwindow.ui", self)
 
         # Setting up the internal model that handles the list of subreddits.
-        self.model = SubredditModel()
+        self.model = SubredditModel(self)
         self.load_subreddits()
         self.subredditView.setModel(self.model)
 
@@ -38,6 +38,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Setting up the thread pool that will handle the threads that are created when getting images.
         self.threadpool = QThreadPool()
+
+        # Number that keeps track of how many workers that are currently getting images from reddit.
+        self.getting_images = 0
 
     def add(self):
         """
@@ -112,7 +115,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.save_subreddits()
 
-    # TODO: Fix. The app crashes when you delete while images are being added.
+    # TODO: Make it so you can delete images from one subreddit that has gotten all its images even if there are other
+    #  subreddits that are still getting images.
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.

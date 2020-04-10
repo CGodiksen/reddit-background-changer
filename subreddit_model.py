@@ -19,7 +19,7 @@ class SubredditModel(QtCore.QAbstractListModel):
     The tuple (/r/aww, "this year", 25) would get the top 25 pictures within the last year from the subreddit /r/aww.
     """
 
-    def __init__(self, *args, subreddits=None, **kwargs):
+    def __init__(self, main_window, subreddits=None, *args, **kwargs):
         super(SubredditModel, self).__init__()
         # The internal storage that will store configuration tuples.
         self.subreddits = subreddits or []
@@ -31,6 +31,8 @@ class SubredditModel(QtCore.QAbstractListModel):
         # Creating the reddit instance using the secret information.
         self.reddit = praw.Reddit(client_id=config["client_id"], client_secret=config["client_secret"],
                                   user_agent=config["user_agent"])
+
+        self.main_window = main_window
 
     def data(self, QModelIndex, role=None):
         """
@@ -71,6 +73,11 @@ class SubredditModel(QtCore.QAbstractListModel):
         the search should be within and the amount of images we should find.
         :return: None
         """
+        # Incrementing getting_images since one more worker is getting images.
+        self.main_window.getting_images += 1
+        # Disabling the delete button since the application crashes if the user deletes while getting images.
+        self.main_window.deleteButton.setEnabled(False)
+
         # Pulling the information from the configuration to increase readability.
         name, time_limit, number_of_images = subreddit_config
 
@@ -96,6 +103,12 @@ class SubredditModel(QtCore.QAbstractListModel):
                     urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
                                                save_path + name + "_" + submission.name + ".jpg")
                     image_counter += 1
+
+        self.main_window.getting_images -= 1
+
+        # Enabling the delete button again if there is no workers currently getting images.
+        if self.main_window.getting_images == 0:
+            self.main_window.deleteButton.setEnabled(True)
 
     def get_all_images(self, save_path):
         """
