@@ -33,6 +33,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Setting up the background changer that will change the background every x seconds, specified by the interval.
         self.background_changer = background_changer
 
+        # Displaying the initial value of the change frequency spin box that is saved in the settings.
+        self.changeFrequencySpinBox.setValue(self.background_changer.settings["interval"])
+
         # Updating the interval when the change frequency spin box is changed.
         self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
 
