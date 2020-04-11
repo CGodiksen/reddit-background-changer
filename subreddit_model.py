@@ -76,8 +76,9 @@ class SubredditModel(QtCore.QAbstractListModel):
         """
         # Incrementing getting_images since one more worker is getting images.
         self.main_window.getting_images += 1
-        # Disabling the delete button since the application crashes if the user deletes while getting images.
+        # Disabling the delete and update buttons since the application crashes if the user delete while getting images.
         self.main_window.deleteButton.setEnabled(False)
+        self.main_window.updateButton.setEnabled(False)
 
         # Pulling the information from the configuration to increase readability.
         name, time_limit, number_of_images = subreddit_config
@@ -106,9 +107,10 @@ class SubredditModel(QtCore.QAbstractListModel):
 
         self.main_window.getting_images -= 1
 
-        # Enabling the delete button again if there is no workers currently getting images.
+        # Enabling the delete and update buttons again if there is no workers currently getting images.
         if self.main_window.getting_images == 0:
             self.main_window.deleteButton.setEnabled(True)
+            self.main_window.updateButton.setEnabled(True)
 
     def get_all_images(self, save_path):
         """
