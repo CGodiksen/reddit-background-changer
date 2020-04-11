@@ -1,3 +1,4 @@
+# noinspection PyUnresolvedReferences
 from win32api import GetSystemMetrics
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
@@ -92,7 +93,6 @@ class SubredditModel(QtCore.QAbstractListModel):
             if image_counter == number_of_images:
                 break
 
-            # TODO: Remove the constraint that limits the images to the reddit domain (Could be problematic).
             # Ensuring that we only download images and that the images are hosted on the reddit domain.
             if submission.is_reddit_media_domain and submission.is_video is False:
 

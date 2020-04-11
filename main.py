@@ -7,9 +7,6 @@ from main_window import MainWindow
 from system_tray import SystemTray
 
 
-# TODO: All images could be refreshed on startup to avoid "dead" images that no longer fit the configuration.
-# TODO: The app should run on startup and run in the background.
-# TODO: Add the folder structure to github.
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))

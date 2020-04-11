@@ -40,7 +40,6 @@ class SystemTray:
 
         # Creating an action that changes the background manually and adding it to the menu of the tray icon.
         self.change_background_action = QAction("Change background")
-        # TODO: Potential problem here. The function does not restart the timer.
         self.change_background_action.triggered.connect(self.background_changer.background_changer)
         self.menu.addAction(self.change_background_action)
 

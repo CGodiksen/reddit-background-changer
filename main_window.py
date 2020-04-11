@@ -115,8 +115,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
             self.save_subreddits()
 
-    # TODO: Make it so you can delete images from one subreddit that has gotten all its images even if there are other
-    #  subreddits that are still getting images.
     def delete(self):
         """
         Deletes the selected subreddit from the internal model.

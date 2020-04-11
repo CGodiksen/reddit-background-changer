@@ -20,7 +20,7 @@ class BackgroundChanger:
         # Setting up the timer that changes the background to a random picture according to the time interval.
         self.timer = QTimer()
         self.timer.timeout.connect(self.background_changer)
-        self.timer.start(self.settings["interval"] * 1000)
+        self.timer.start(self.settings["interval"] * 60000)
 
     def background_changer(self):
         """
@@ -28,7 +28,6 @@ class BackgroundChanger:
 
         :return: None
         """
-        # TODO: Maybe implement a system to ensure equal distribution of picks.
         # Wrapping in a try-except to handle invalid/broken images.
         try:
             # Choosing a random .jpg image from the folder containing all possible backgrounds.
@@ -62,7 +61,7 @@ class BackgroundChanger:
         """Setter function for the interval instance variable that restarts the timer with the new interval."""
         # Multiplied by 60000 to convert minutes to ms.
         self.settings["interval"] = interval_minutes
-        self.timer.start(self.settings["interval"] * 1000)
+        self.timer.start(self.settings["interval"] * 60000)
 
         # Saving the changed settings to the settings file.
         self.save_settings()

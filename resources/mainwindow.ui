@@ -55,6 +55,15 @@
     <property name="text">
      <string>Delete</string>
     </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+    <property name="flat">
+     <bool>false</bool>
+    </property>
    </widget>
    <widget class="QLineEdit" name="subredditEdit">
     <property name="geometry">
@@ -192,6 +201,9 @@
       <width>42</width>
       <height>22</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <number>999</number>
     </property>
    </widget>
   </widget>
