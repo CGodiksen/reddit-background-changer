@@ -5,11 +5,15 @@ from PyQt5 import QtWidgets, QtGui
 from background_changer import BackgroundChanger
 from main_window import MainWindow
 from system_tray import SystemTray
+from PyQt5.QtWinExtras import QtWin
 
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))
+
+    # Changing the app id so our custom window icon is shown on the toolbar.
+    QtWin.setCurrentProcessExplicitAppUserModelID('reddit_background_changer.v1.0')
 
     # Ensuring that we do not stop the application when the main window is closed.
     app.setQuitOnLastWindowClosed(False)
