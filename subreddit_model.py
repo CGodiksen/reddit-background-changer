@@ -96,15 +96,20 @@ class SubredditModel(QtCore.QAbstractListModel):
             if image_counter == number_of_images:
                 break
 
-            # Ensuring that we only download images and that the images are hosted on the reddit domain.
-            if submission.is_reddit_media_domain and submission.is_video is False:
-                # Ensuring that the images are large enough to be used as a desktop background.
-                if submission.preview["images"][0]["source"]["width"] > self.user32.GetSystemMetrics(0) and \
-                        submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
-                    # Downloading the image from the url and saving it to the specified folder using its unique name.
-                    urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
-                                               save_path + name + "_" + submission.name + ".jpg")
-                    image_counter += 1
+            # Catching rare problematic submissions and ignoring them if they cause problems.
+            try:
+                # Ensuring that we only download images and that the images are hosted on the reddit domain.
+                if submission.is_reddit_media_domain and submission.is_video is False:
+                    # Ensuring that the images are large enough to be used as a desktop background.
+                    if submission.preview["images"][0]["source"]["width"] > self.user32.GetSystemMetrics(0) and \
+                            submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
+                        # Downloading the image from the url and saving it to the folder using its unique name.
+                        urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
+                                                   save_path + name + "_" + submission.name + ".jpg")
+                        image_counter += 1
+            except Exception as e:
+                print("Image getter:" + str(e))
+                continue
 
         self.main_window.getting_images -= 1
 
