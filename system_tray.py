@@ -14,7 +14,7 @@ class SystemTray:
 
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
-        self.tray.setIcon(QIcon("resources/reddit_icon.PNG"))
+        self.tray.setIcon(QIcon("resources/reddit_icon.ico"))
         self.tray.setVisible(True)
 
         # Creating the menu.

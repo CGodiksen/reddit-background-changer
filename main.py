@@ -11,7 +11,7 @@ from PyQt5.QtWinExtras import QtWin
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
-    app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.PNG'))
+    app.setWindowIcon(QtGui.QIcon('resources/reddit_icon.ico'))
 
     # Changing the app id so our custom window icon is shown on the toolbar.
     QtWin.setCurrentProcessExplicitAppUserModelID('reddit_background_changer.v1.0')
