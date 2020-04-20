@@ -35,4 +35,4 @@ $ pip install -r requirements.txt
 ```
 
 ## Contributing
-This project is currently private and there is no plans on making outside contributions to the project available in the near future.
+This project is currently private and there are no plans to make outside contributions available in the near future.
