@@ -1,4 +1,5 @@
 import sys
+import os
 
 from PyQt5 import QtWidgets, QtGui
 
@@ -19,7 +20,8 @@ def main():
     app.setQuitOnLastWindowClosed(False)
 
     # Setting up the background changer that will be used in the main window and the system tray.
-    background_changer = BackgroundChanger("C:/Users/chris/PycharmProjects/reddit-desktop-background/data/images/")
+    # We use the absolute path since it is required when changing the background on windows.
+    background_changer = BackgroundChanger(os.path.abspath("data/images") + "/")
 
     main_window = MainWindow(background_changer)
     system_tray = SystemTray(background_changer, main_window, app)

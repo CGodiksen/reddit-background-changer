@@ -3,8 +3,6 @@ import os
 import random
 import json
 from PIL import Image
-# noinspection PyUnresolvedReferences
-from win32api import GetSystemMetrics
 from PyQt5.QtCore import QTimer
 
 
@@ -22,6 +20,9 @@ class BackgroundChanger:
         self.timer.timeout.connect(self.background_changer)
         self.timer.start(self.settings["interval"] * 60000)
 
+        # Used for getting the monitor resolution.
+        self.user32 = ctypes.windll.user32
+
     def background_changer(self):
         """
         Changes the background of the desktop to a random image from the self.image_dict folder.
@@ -35,7 +36,8 @@ class BackgroundChanger:
             background_image = Image.open(self.image_dict + background_name)
 
             # Resizing the image so it fits the desktop size.
-            resized_background_image = self.resize_image(background_image)
+            resized_background_image = self.resize_image(background_image, self.user32.GetSystemMetrics(0),
+                                                         self.user32.GetSystemMetrics(1))
 
             # Setting the background
             self.set_background(resized_background_image.convert("RGB"))
@@ -49,7 +51,7 @@ class BackgroundChanger:
         ctypes.windll.user32.SystemParametersInfoW(20, 0, self.image_dict + "background.jpg", 0)
 
     @staticmethod
-    def resize_image(image, desktop_width=GetSystemMetrics(0), desktop_height=GetSystemMetrics(1)):
+    def resize_image(image, desktop_width, desktop_height):
         """Resizes the given image according to the resolution of the desktop."""
         # Calculating the ratio that we resize based upon by finding the aspect that needs to be scaled the most.
         image_width, image_height = image.size

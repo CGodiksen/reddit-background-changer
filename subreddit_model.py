@@ -1,5 +1,3 @@
-# noinspection PyUnresolvedReferences
-from win32api import GetSystemMetrics
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 from shutil import copyfile
@@ -7,6 +5,7 @@ import praw
 import json
 import urllib.request
 import os
+import ctypes
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -34,6 +33,9 @@ class SubredditModel(QtCore.QAbstractListModel):
                                   user_agent=config["user_agent"])
 
         self.main_window = main_window
+
+        # Used for getting the monitor resolution.
+        self.user32 = ctypes.windll.user32
 
     def data(self, QModelIndex, role=None):
         """
@@ -96,10 +98,9 @@ class SubredditModel(QtCore.QAbstractListModel):
 
             # Ensuring that we only download images and that the images are hosted on the reddit domain.
             if submission.is_reddit_media_domain and submission.is_video is False:
-
                 # Ensuring that the images are large enough to be used as a desktop background.
-                if submission.preview["images"][0]["source"]["width"] > GetSystemMetrics(0) and \
-                        submission.preview["images"][0]["source"]["height"] > GetSystemMetrics(1):
+                if submission.preview["images"][0]["source"]["width"] > self.user32.GetSystemMetrics(0) and \
+                        submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
                     # Downloading the image from the url and saving it to the specified folder using its unique name.
                     urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
                                                save_path + name + "_" + submission.name + ".jpg")
@@ -167,6 +168,6 @@ class SubredditModel(QtCore.QAbstractListModel):
         if subreddit.icon_img != "":
             # Save the icon to the icons folder.
             urllib.request.urlretrieve(subreddit.icon_img, save_path + subreddit.display_name + ".png")
-        # If not we just save the subreddit icon as the default icon. We assume the save_path folder has a default icon.
+        # If not we just save the subreddit icon as the default icon.
         else:
             copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
