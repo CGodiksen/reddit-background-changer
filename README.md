@@ -17,6 +17,10 @@ right-clicking the system tray icon. Finally, the concurrency that ensures that 
 This concurrency is rather important since without it, the UI would be unresponsive when retrieving images from the given subreddits 
 which can be a time consuming task.
 
+## Graphical user interface
+The user interface was created using the Qt framework.
+![Example of GUI](https://i.imgur.com/F1cBRvL.png)
+
 ## Installation
 If you wish to use this application for yourself some setup is required. This application is currently not configured to support
 distribution which is why i don't recommend that you use it at this time. It is however not impossible.
