@@ -19,6 +19,7 @@ which can be a time consuming task.
 
 ## Graphical user interface
 The user interface was created using the Qt framework.
+
 ![Example of GUI](https://i.imgur.com/F1cBRvL.png)
 
 ## Installation
