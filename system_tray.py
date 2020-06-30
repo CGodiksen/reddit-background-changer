@@ -1,3 +1,5 @@
+import json
+import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
@@ -11,6 +13,10 @@ class SystemTray:
         self.background_changer = background_changer
         self.main_window = main_window
         self.app = app
+
+        # Loading the settings from the app_settings json file to get the blacklist.
+        self.settings = {}
+        self.load_settings()
 
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
@@ -40,8 +46,39 @@ class SystemTray:
 
         # Creating an action that changes the background manually and adding it to the menu of the tray icon.
         self.change_background_action = QAction("Change background")
-        self.change_background_action.triggered.connect(self.background_changer.background_changer)
+        self.change_background_action.triggered.connect(self.change_background)
         self.menu.addAction(self.change_background_action)
 
         # Add the menu to the tray.
         self.tray.setContextMenu(self.menu)
+
+    def change_background(self):
+        """
+        Changing the background manually and adding the old background image to the blacklist. We assume that the
+        background was changed manually due to the background being undesirable.
+        """
+        initial_background = self.main_window.current_background
+
+        if initial_background != "":
+            # Removing the initial image from the folder containing the possible backgrounds.
+            os.remove("data/images/" + initial_background)
+
+            # Adding the initial image to the blacklist.
+            blacklist = self.settings["blacklist"]
+            blacklist.append(initial_background)
+
+            # Updating the settings with the new blacklist.
+            self.settings["blacklist"] = blacklist
+            self.save_settings()
+
+        self.main_window.current_background = self.background_changer.background_changer()
+
+    def load_settings(self):
+        """Loading the settings from the settings file and return the dictionary."""
+        with open("data/app_settings.json", "r") as subreddit_file:
+            self.settings = json.load(subreddit_file)
+
+    def save_settings(self):
+        """Saving the settings to the settings file."""
+        with open("data/app_settings.json", "w") as subreddit_file:
+            json.dump(self.settings, subreddit_file)

@@ -45,6 +45,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # Number that keeps track of how many workers that are currently getting images from reddit.
         self.getting_images = 0
 
+        # The filename of the image that is currently the desktop background.
+        self.current_background = ""
+
     def add(self):
         """
         Takes configuration settings in subredditEdit, timeComboBox and numberSpinBox and adds a new subreddit

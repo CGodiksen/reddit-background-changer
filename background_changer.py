@@ -27,7 +27,7 @@ class BackgroundChanger:
         """
         Changes the background of the desktop to a random image from the self.image_dict folder.
 
-        :return: None
+        :return: The filename of the image that is chosen to be the new background.
         """
         # Wrapping in a try-except to handle invalid/broken images.
         try:
@@ -43,6 +43,9 @@ class BackgroundChanger:
             self.set_background(resized_background_image.convert("RGB"))
         except Exception as e:
             print("Background changer: " + str(e))
+            return ""
+
+        return background_name
 
     def set_background(self, image):
         """Sets the desktop background to the given image."""
@@ -61,6 +64,8 @@ class BackgroundChanger:
 
     def set_interval(self, interval_minutes):
         """Setter function for the interval instance variable that restarts the timer with the new interval."""
+        self.load_settings()
+
         # Multiplied by 60000 to convert minutes to ms.
         self.settings["interval"] = interval_minutes
         self.timer.start(self.settings["interval"] * 60000)

@@ -1,4 +1,4 @@
-This folder should contain the file: "reddit.config.json". This file contains
+This folder should contain the file: "reddit_config.json". This file contains
 the configuration for the reddit API access. 
 
 The file should have the following format:

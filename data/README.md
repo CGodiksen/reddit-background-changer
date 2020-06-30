@@ -9,6 +9,7 @@ The file "app_settings.json" should have the following format:
 ```
 {
   "interval": MinutesBetweenBackgroundChange
+  "blacklist": ["BlacklistedImage1", "BlacklistedImage2", ...]
 }
 ```
 

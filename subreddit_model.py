@@ -33,6 +33,7 @@ class SubredditModel(QtCore.QAbstractListModel):
                                   user_agent=config["user_agent"])
 
         self.main_window = main_window
+        self.settings = {}
 
         # Used for getting the monitor resolution.
         self.user32 = ctypes.windll.user32
@@ -82,6 +83,9 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.main_window.deleteButton.setEnabled(False)
         self.main_window.updateButton.setEnabled(False)
 
+        # Loading the settings from the app_settings json file to get the blacklist.
+        self.load_settings()
+
         # Pulling the information from the configuration to increase readability.
         name, time_limit, number_of_images = subreddit_config
 
@@ -103,10 +107,13 @@ class SubredditModel(QtCore.QAbstractListModel):
                     # Ensuring that the images are large enough to be used as a desktop background.
                     if submission.preview["images"][0]["source"]["width"] > self.user32.GetSystemMetrics(0) and \
                             submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
-                        # Downloading the image from the url and saving it to the folder using its unique name.
-                        urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
-                                                   save_path + name + "_" + submission.name + ".jpg")
-                        image_counter += 1
+                        filename = name + "_" + submission.name + ".jpg"
+                        # If the filename is not in the blacklist.
+                        if filename not in self.settings["blacklist"]:
+                            # Downloading the image from the url and saving it to the folder using its unique name.
+                            urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
+                                                       save_path + filename)
+                            image_counter += 1
             except Exception as e:
                 print("Image getter:" + str(e))
                 continue
@@ -176,3 +183,8 @@ class SubredditModel(QtCore.QAbstractListModel):
         # If not we just save the subreddit icon as the default icon.
         else:
             copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
+
+    def load_settings(self):
+        """Loading the settings from the settings file and return the dictionary."""
+        with open("data/app_settings.json", "r") as subreddit_file:
+            self.settings = json.load(subreddit_file)
