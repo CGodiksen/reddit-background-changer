@@ -1,9 +1,11 @@
 import ctypes
 import os
 import random
-import json
+
 from PIL import Image
 from PyQt5.QtCore import QTimer
+
+from settings import Settings
 
 
 class BackgroundChanger:
@@ -11,14 +13,12 @@ class BackgroundChanger:
         # The path to the folder that contains the images that can be picked as the desktop background.
         self.image_dict = image_dict
 
-        # Setting up the settings specific to the functionality that changes the background.
-        self.settings = {}
-        self.load_settings()
+        self.settings = Settings()
 
         # Setting up the timer that changes the background to a random picture according to the time interval.
         self.timer = QTimer()
         self.timer.timeout.connect(self.background_changer)
-        self.timer.start(self.settings["interval"] * 60000)
+        self.timer.start(self.settings.change_frequency * 60000)
 
         # Used for getting the monitor resolution.
         self.user32 = ctypes.windll.user32
@@ -64,21 +64,9 @@ class BackgroundChanger:
 
     def set_interval(self, interval_minutes):
         """Setter function for the interval instance variable that restarts the timer with the new interval."""
-        self.load_settings()
-
         # Multiplied by 60000 to convert minutes to ms.
-        self.settings["interval"] = interval_minutes
-        self.timer.start(self.settings["interval"] * 60000)
+        self.settings.change_frequency = interval_minutes
+        self.timer.start(self.settings.change_frequency * 60000)
 
         # Saving the changed settings to the settings file.
-        self.save_settings()
-
-    def load_settings(self):
-        """Loading the settings from the settings file and return the dictionary."""
-        with open("resources/settings.json", "r") as subreddit_file:
-            self.settings = json.load(subreddit_file)
-
-    def save_settings(self):
-        """Saving the settings to the settings file."""
-        with open("resources/settings.json", "w") as subreddit_file:
-            json.dump(self.settings, subreddit_file)
+        self.settings.save_settings()

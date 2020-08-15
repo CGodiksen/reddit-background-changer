@@ -19,6 +19,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Load the UI Page
         uic.loadUi("resources/mainwindow.ui", self)
 
+        self.create_storage_setup()
+
         # Setting up the internal model that handles the list of subreddits.
         self.model = SubredditModel(self)
         self.load_subreddits()
@@ -36,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.background_changer = background_changer
 
         # Displaying the initial value of the change frequency spin box that is saved in the settings.
-        self.changeFrequencySpinBox.setValue(self.background_changer.settings["interval"])
+        self.changeFrequencySpinBox.setValue(self.background_changer.settings.change_frequency)
 
         # Updating the interval when the change frequency spin box is changed.
         self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
@@ -179,7 +181,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Simple function that saves the current internal list model into the persistent json file. If the json file
         does not exist then the file is created first.
         """
-        with open("data/subreddits.json", "w+") as subreddit_file:
+        with open("data/subreddits.json", "w") as subreddit_file:
             json.dump(self.model.subreddits, subreddit_file)
 
     @staticmethod
@@ -191,3 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         pathlib.Path("data/icons").mkdir(parents=True, exist_ok=True)
         pathlib.Path("data/images").mkdir(parents=True, exist_ok=True)
+
+        if "subreddits.json" not in os.listdir("data"):
+            with open("data/subreddits.json", "w+") as subreddit_file:
+                json.dump([], subreddit_file)
