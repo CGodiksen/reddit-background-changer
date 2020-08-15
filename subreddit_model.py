@@ -1,11 +1,13 @@
+import ctypes
+import os
+import urllib.request
+from shutil import copyfile
+
+import praw
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
-from shutil import copyfile
-import praw
-import json
-import urllib.request
-import os
-import ctypes
+
+from settings import Settings
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -24,17 +26,14 @@ class SubredditModel(QtCore.QAbstractListModel):
         # The internal storage that will store configuration tuples.
         self.subreddits = subreddits or []
 
-        # TODO: Here
-        # Getting the secret information for the reddit application from the config file.
-        with open("configuration/reddit_config.json", "r") as config_file:
-            config = json.load(config_file)
+        # Getting the secret information for the reddit instance from the settings file.
+        self.settings = Settings()
 
         # Creating the reddit instance using the secret information.
-        self.reddit = praw.Reddit(client_id=config["client_id"], client_secret=config["client_secret"],
-                                  user_agent=config["user_agent"])
+        self.reddit = praw.Reddit(client_id=self.settings.client_id, client_secret=self.settings.client_secret,
+                                  user_agent=self.settings.user_agent)
 
         self.main_window = main_window
-        self.settings = {}
 
         # Used for getting the monitor resolution.
         self.user32 = ctypes.windll.user32
@@ -84,8 +83,8 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.main_window.deleteButton.setEnabled(False)
         self.main_window.updateButton.setEnabled(False)
 
-        # Loading the settings from the app_settings json file to get the blacklist.
-        self.load_settings()
+        # Loading the settings from the settings json file to get the most recent blacklist.
+        self.settings.load_settings()
 
         # Pulling the information from the configuration to increase readability.
         name, time_limit, number_of_images = subreddit_config
@@ -110,7 +109,7 @@ class SubredditModel(QtCore.QAbstractListModel):
                             submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
                         filename = name + "_" + submission.name + ".jpg"
                         # If the filename is not in the blacklist.
-                        if filename not in self.settings["blacklist"]:
+                        if filename not in self.settings.blacklist:
                             # Downloading the image from the url and saving it to the folder using its unique name.
                             urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
                                                        save_path + filename)
@@ -184,8 +183,3 @@ class SubredditModel(QtCore.QAbstractListModel):
         # If not we just save the subreddit icon as the default icon.
         else:
             copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
-
-    def load_settings(self):
-        """Loading the settings from the settings file and return the dictionary."""
-        with open("resources/settings.json", "r") as subreddit_file:
-            self.settings = json.load(subreddit_file)
