@@ -24,6 +24,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         # The internal storage that will store configuration tuples.
         self.subreddits = subreddits or []
 
+        # TODO: Here
         # Getting the secret information for the reddit application from the config file.
         with open("configuration/reddit_config.json", "r") as config_file:
             config = json.load(config_file)
@@ -186,5 +187,5 @@ class SubredditModel(QtCore.QAbstractListModel):
 
     def load_settings(self):
         """Loading the settings from the settings file and return the dictionary."""
-        with open("configuration/app_settings.json", "r") as subreddit_file:
+        with open("resources/settings.json", "r") as subreddit_file:
             self.settings = json.load(subreddit_file)
