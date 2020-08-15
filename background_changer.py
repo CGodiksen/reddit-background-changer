@@ -75,10 +75,10 @@ class BackgroundChanger:
 
     def load_settings(self):
         """Loading the settings from the settings file and return the dictionary."""
-        with open("data/app_settings.json", "r") as subreddit_file:
+        with open("configuration/app_settings.json", "r") as subreddit_file:
             self.settings = json.load(subreddit_file)
 
     def save_settings(self):
         """Saving the settings to the settings file."""
-        with open("data/app_settings.json", "w") as subreddit_file:
+        with open("configuration/app_settings.json", "w") as subreddit_file:
             json.dump(self.settings, subreddit_file)

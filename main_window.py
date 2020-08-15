@@ -176,3 +176,14 @@ class MainWindow(QtWidgets.QMainWindow):
         """Simple function that saves the current internal list model into the persistent json file."""
         with open("data/subreddits.json", "w") as subreddit_file:
             json.dump(self.model.subreddits, subreddit_file)
+
+    def create_storage_setup(self):
+        """
+        Sets up the initial folder structure if it does not already exist. This includes creating a "data" folder
+        that contains the two sub-folders "icons"  and "images". The "data" folder will also contain the "subreddits"
+        json file which keeps track of the currently chosen added subreddits.
+
+        The method also adds a reddit config file to the "configuration" folder which will contain the info used to
+        connect to the Reddit API. Finally an app settings is added which keeps track of the user specific settings like
+        the internal between background changes and the image blacklist.
+        """
