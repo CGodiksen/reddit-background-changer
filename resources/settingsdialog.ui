@@ -148,6 +148,12 @@
       </item>
       <item row="0" column="1">
        <widget class="QSpinBox" name="changeFrequencySpinBox">
+        <property name="maximumSize">
+         <size>
+          <width>40</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="minimum">
          <number>1</number>
         </property>
@@ -186,8 +192,6 @@
     </item>
    </layout>
    <zorder>buttonBox</zorder>
-   <zorder>formLayoutWidget</zorder>
-   <zorder>formLayoutWidget_2</zorder>
    <zorder>label_4</zorder>
    <zorder>label_5</zorder>
    <zorder>verticalSpacer_2</zorder>

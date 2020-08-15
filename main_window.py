@@ -38,10 +38,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.background_changer = background_changer
 
         # Displaying the initial value of the change frequency spin box that is saved in the settings.
-        self.changeFrequencySpinBox.setValue(self.background_changer.settings.change_frequency)
+        # self.changeFrequencySpinBox.setValue(self.background_changer.settings.change_frequency)
 
         # Updating the interval when the change frequency spin box is changed.
-        self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
+        # self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
 
         # Setting up the thread pool that will handle the threads that are created when getting images.
         self.threadpool = QThreadPool()
