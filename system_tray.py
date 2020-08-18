@@ -68,4 +68,4 @@ class SystemTray:
             self.settings.blacklist.append(initial_background)
             self.settings.save_settings()
 
-        self.main_window.current_background = self.background_changer.background_changer()
+        self.main_window.current_background = self.background_changer.change_background()
