@@ -28,7 +28,7 @@ class SettingsDialog(QtWidgets.QDialog):
         self.settings.client_id = self.clientIDLineEdit.text()
         self.settings.client_secret = self.clientSecretLineEdit.text()
         self.settings.user_agent = self.userAgentLineEdit.text()
-        self.settings.change_frequency = self.changeFrequencySpinBox.text()
+        self.settings.change_frequency = self.changeFrequencySpinBox.value()
 
         self.settings.save_settings()
 
@@ -36,5 +36,5 @@ class SettingsDialog(QtWidgets.QDialog):
         """Reverting the text in the line edits back to the initial text."""
         self.clientIDLineEdit.setText(self.settings.client_id)
         self.clientSecretLineEdit.setText(self.settings.client_secret)
-        self.usernameLineEdit.setText(self.settings.username)
+        self.userAgentLineEdit.setText(self.settings.user_agent)
         self.changeFrequencySpinBox.setValue(self.settings.change_frequency)

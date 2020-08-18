@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>570</width>
-    <height>279</height>
+    <height>280</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -206,7 +206,7 @@ color: rgb(255, 255, 255);</string>
           <widget class="QLabel" name="label">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
@@ -220,7 +220,7 @@ color: rgb(255, 255, 255);</string>
           <widget class="QLineEdit" name="subredditEdit">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
           </widget>
@@ -242,7 +242,7 @@ color: rgb(255, 255, 255);</string>
           <widget class="QLabel" name="label_2">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
@@ -262,7 +262,7 @@ color: rgb(255, 255, 255);</string>
            </property>
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
            <item>
@@ -314,7 +314,7 @@ color: rgb(255, 255, 255);</string>
           <widget class="QLabel" name="label_3">
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
              <weight>75</weight>
              <bold>true</bold>
             </font>
@@ -334,7 +334,7 @@ color: rgb(255, 255, 255);</string>
            </property>
            <property name="font">
             <font>
-             <pointsize>12</pointsize>
+             <pointsize>11</pointsize>
             </font>
            </property>
            <property name="maximum">

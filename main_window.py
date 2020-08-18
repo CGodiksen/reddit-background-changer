@@ -5,6 +5,7 @@ import pathlib
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThreadPool
 
+from settings_dialog import SettingsDialog
 from subreddit_model import SubredditModel
 from worker import Worker
 
@@ -31,17 +32,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.updateButton.clicked.connect(self.update_subreddit)
         self.deleteButton.clicked.connect(self.delete)
 
+        self.settings_dialog = SettingsDialog()
+        self.settingsButton.clicked.connect(self.settings_dialog.show)
+
         # Updating the shown subreddit settings in the UI when a subreddit from the listView is selected.
         self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
 
         # Setting up the background changer that will change the background every x seconds, specified by the interval.
         self.background_changer = background_changer
-
-        # Displaying the initial value of the change frequency spin box that is saved in the settings.
-        # self.changeFrequencySpinBox.setValue(self.background_changer.settings.change_frequency)
-
-        # Updating the interval when the change frequency spin box is changed.
-        # self.changeFrequencySpinBox.valueChanged.connect(self.background_changer.set_interval)
 
         # Setting up the thread pool that will handle the threads that are created when getting images.
         self.threadpool = QThreadPool()
