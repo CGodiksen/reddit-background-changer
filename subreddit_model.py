@@ -35,9 +35,6 @@ class SubredditModel(QtCore.QAbstractListModel):
 
         self.main_window = main_window
 
-        # Used for getting the monitor resolution.
-        self.user32 = ctypes.windll.user32
-
     def data(self, QModelIndex, role=None):
         """
         Returns the data stored under the given role for the item referred to by the index.
@@ -102,18 +99,11 @@ class SubredditModel(QtCore.QAbstractListModel):
 
             # Catching rare problematic submissions and ignoring them if they cause problems.
             try:
-                # Ensuring that we only download images and that the images are hosted on the reddit domain.
-                if submission.is_reddit_media_domain and submission.is_video is False:
-                    # Ensuring that the images are large enough to be used as a desktop background.
-                    if submission.preview["images"][0]["source"]["width"] > self.user32.GetSystemMetrics(0) and \
-                            submission.preview["images"][0]["source"]["height"] > self.user32.GetSystemMetrics(1):
-                        filename = name + "_" + submission.name + ".jpg"
-                        # If the filename is not in the blacklist.
-                        if filename not in self.settings.blacklist:
-                            # Downloading the image from the url and saving it to the folder using its unique name.
-                            urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"],
-                                                       save_path + filename)
-                            image_counter += 1
+                filename = name + "_" + submission.name + ".jpg"
+                if self.check_background_viability(submission, filename):
+                    # Downloading the image from the url and saving it to the folder using its unique name.
+                    urllib.request.urlretrieve(submission.preview["images"][0]["source"]["url"], save_path + filename)
+                    image_counter += 1
             except Exception as e:
                 print("Image getter:" + str(e))
                 continue
@@ -134,6 +124,33 @@ class SubredditModel(QtCore.QAbstractListModel):
         """
         for subreddit in self.subreddits:
             self.get_images(subreddit, save_path)
+
+    def check_background_viability(self, submission, filename):
+        """
+        Checks whether or not the given submission is viable to use as a desktop background. This includes checking that
+        the submission is hosted on the reddit media domain, checking that the submission is an image, checking that
+        the image is large enough, checking that the aspect ratio is similar to the monitor aspect ratio and finally
+        checking if the image is in the blacklist.
+
+        :param submission: The reddit submission that is checked for its viability as an background image.
+        :param filename: The filename of the image if it was downloaded, used to check if the image is in the blacklist.
+        :return: True if the submission is viable as a desktop background, false otherwise.
+        """
+        if submission.is_reddit_media_domain:
+            if submission.is_video is False:
+                image_width = submission.preview["images"][0]["source"]["width"]
+                image_height = submission.preview["images"][0]["source"]["height"]
+                monitor_width = ctypes.windll.user32.GetSystemMetrics(0)
+                monitor_height = ctypes.windll.user32.GetSystemMetrics(1)
+
+                if image_width >= monitor_width and image_height >= monitor_height:
+                    image_aspect_ratio = image_width / image_height
+                    monitor_aspect_ratio = monitor_width / monitor_height
+
+                    if abs(monitor_aspect_ratio - image_aspect_ratio) <= 0.2:
+                        if filename not in self.settings.blacklist:
+                            return True
+        return False
 
     @staticmethod
     def delete_images(subreddit_name, delete_path):
