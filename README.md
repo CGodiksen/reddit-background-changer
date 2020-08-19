@@ -25,7 +25,7 @@ The user interface was created using the Qt framework.
 ![Example of main window](https://i.imgur.com/cQa5CMc.png)
 
 ### Settings dialog window
-![Example of settings dialog window](https://i.imgur.com/vJAhzm6.png)
+![Example of settings dialog window](https://i.imgur.com/VwRF7mD.png)
 
 ## Installation
 If you wish to use this application for yourself some setup is required.
