@@ -3,12 +3,14 @@ Automatically changes the desktop background to an image from the subreddits of 
 
 
 ## Design
-The project is made using an object-oriented design where program execution starts from the **main.py** file. The UI is implemented
-in the **resources/mainwindow.ui** file and all UI functionallity is implemented in the **main_window.py** file. The latter connects
-all elements of the UI with their corresponding functions. The UI is built around a list containing the subreddits chosen by the user.
-This list is implemented in the **subreddit_model.py** file. All functionallity that is related to the list of subreddits, like
+The project is made using an object-oriented design where program execution starts from the **main.py** file. The main UI is implemented
+in the **resources/mainwindow.ui** file and all UI functionallity related to the main window is implemented in the **main_window.py** file.
+The latter connects all elements of the main window UI with their corresponding functions. The main window is built around a list containing the
+subreddits chosen by the user. This list is implemented in the **subreddit_model.py** file. All functionallity that is related to the list of subreddits, like
 getting the images from the subreddits and deleting images, is implemented in this file. Note that this class inherits from
-***QAbstractListModel*** which means that we can use it directly as the internal model for the **QListView** that is used in the UI.
+***QAbstractListModel*** which means that we can use it directly as the internal model for the **QListView** that is used in the UI. The UI for the settings
+dialog window is implemented in the **resources/settingsdialog.ui** file and all UI functionallity related to the settings dialog window is implemented in
+the **settings_dialog.py** file. This dialog window supports changing the settings which are implemented as a class in the **settings.py** file for increased accessibility throughout the application.
 
 Choosing an image and changing the background is handled by the **background_changer.py** file. This class is built around a basic
 timer that is used to implement the frequency at which we change the background. The background can also be changed manually through the 
@@ -19,18 +21,17 @@ which can be a time consuming task.
 
 ## Graphical user interface
 The user interface was created using the Qt framework.
+### Main window
+![Example of main window](https://i.imgur.com/cQa5CMc.png)
 
-![Example of GUI](https://i.imgur.com/F1cBRvL.png)
+### Settings dialog window
+![Example of settings dialog window](https://i.imgur.com/vJAhzm6.png)
 
 ## Installation
-If you wish to use this application for yourself some setup is required. This application is currently not configured to support
-distribution which is why i don't recommend that you use it at this time. It is however not impossible.
+If you wish to use this application for yourself some setup is required.
 
-The basic folder structure of the project is already complete, all you need to do is to visit the ***configuration/*** and ***data/*** 
-folders and follow the instructions given in the internal README.md files. Each folder contains a README file that explains which files are
-needed in that folder and how to set them up.
-
-In the configuration folder a config file for reddit API access is needed. 
+In the settings you need to input your own client ID, client secret and user agent which is needed for reddit API access. The application was not designed with 
+the intention of distribution, which is why it is necessary for each user to individually set up the reddit API access.
 For more information on how to set up reddit API access see: https://praw.readthedocs.io/en/latest/getting_started/quick_start.html
 
 ### Requirements
