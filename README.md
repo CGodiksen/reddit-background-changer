@@ -39,6 +39,3 @@ A conventional requirements file is included which means that all dependencies c
 ```
 $ pip install -r requirements.txt
 ```
-
-## Contributing
-This project is currently private and there are no plans to make outside contributions available in the near future.
