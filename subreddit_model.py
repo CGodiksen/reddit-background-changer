@@ -80,6 +80,10 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.main_window.deleteButton.setEnabled(False)
         self.main_window.updateButton.setEnabled(False)
 
+        # Visually changing the buttons so it is clear that they are disabled.
+        self.main_window.deleteButton.setFlat(True)
+        self.main_window.updateButton.setFlat(True)
+
         # Loading the settings from the settings json file to get the most recent blacklist.
         self.settings.load_settings()
 
@@ -114,6 +118,10 @@ class SubredditModel(QtCore.QAbstractListModel):
         if self.main_window.getting_images == 0:
             self.main_window.deleteButton.setEnabled(True)
             self.main_window.updateButton.setEnabled(True)
+
+            # Visually changing the buttons back so it is clear they are enabled again.
+            self.main_window.deleteButton.setFlat(False)
+            self.main_window.updateButton.setFlat(False)
 
     def get_all_images(self, save_path):
         """
