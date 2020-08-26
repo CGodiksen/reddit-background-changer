@@ -26,12 +26,8 @@ class SubredditModel(QtCore.QAbstractListModel):
         # The internal storage that will store configuration tuples.
         self.subreddits = subreddits or []
 
-        # Getting the secret information for the reddit instance from the settings file.
+        # Setting up the settings containing the secret information for the reddit instance and the blacklist.
         self.settings = Settings()
-
-        # Creating the reddit instance using the secret information.
-        self.reddit = praw.Reddit(client_id=self.settings.client_id, client_secret=self.settings.client_secret,
-                                  user_agent=self.settings.user_agent)
 
         self.main_window = main_window
 
@@ -72,8 +68,14 @@ class SubredditModel(QtCore.QAbstractListModel):
         :param save_path: The path to the folder in which we save the images.
         :param subreddit_config: The subreddit configuration that describes the subreddit we should search, the time limit
         the search should be within and the amount of images we should find.
-        :return: None
         """
+        # Loading the most recent settings.
+        self.settings.load_settings()
+
+        # Creating the reddit instance using the secret information.
+        reddit = praw.Reddit(client_id=self.settings.client_id, client_secret=self.settings.client_secret,
+                             user_agent=self.settings.user_agent)
+
         # Incrementing getting_images since one more worker is getting images.
         self.main_window.getting_images += 1
         # Disabling the delete and update buttons since the application crashes if the user delete while getting images.
@@ -84,16 +86,13 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.main_window.deleteButton.setFlat(True)
         self.main_window.updateButton.setFlat(True)
 
-        # Loading the settings from the settings json file to get the most recent blacklist.
-        self.settings.load_settings()
-
         # Pulling the information from the configuration to increase readability.
         name, time_limit, number_of_images = subreddit_config
 
         # Converting the time limit into the corresponding time filter that can be used in top().
         time_limit = self.convert_time_limit(time_limit)
 
-        subreddit = self.reddit.subreddit(name)
+        subreddit = reddit.subreddit(name)
         image_counter = 0
 
         for submission in subreddit.top(time_filter=time_limit, limit=1000):
@@ -112,6 +111,9 @@ class SubredditModel(QtCore.QAbstractListModel):
                 print("Image getter:" + str(e))
                 continue
 
+        # Adding the subreddit icon to the icon folder.
+        self.get_icon(subreddit, "data/icons/")
+
         self.main_window.getting_images -= 1
 
         # Enabling the delete and update buttons again if there is no workers currently getting images.
@@ -122,16 +124,6 @@ class SubredditModel(QtCore.QAbstractListModel):
             # Visually changing the buttons back so it is clear they are enabled again.
             self.main_window.deleteButton.setFlat(False)
             self.main_window.updateButton.setFlat(False)
-
-    def get_all_images(self, save_path):
-        """
-        Finds the specified images for every subreddit configuration that is currently in the internal list model.
-
-        :param save_path: The path to the folder in which we save the images.
-        :return: None
-        """
-        for subreddit in self.subreddits:
-            self.get_images(subreddit, save_path)
 
     def check_background_viability(self, submission, filename):
         """
@@ -167,7 +159,6 @@ class SubredditModel(QtCore.QAbstractListModel):
 
         :param subreddit_name: The subreddit which pictures should be removed from the delete path folder.
         :param delete_path: The folder in which we should delete the picture.
-        :return: None
         """
         # Iterating through the files in the delete folder.
         for filename in os.listdir(delete_path):
@@ -192,15 +183,13 @@ class SubredditModel(QtCore.QAbstractListModel):
             "All time": "all"
         }[time_limit]
 
-    def get_icon(self, subreddit_name, save_path):
+    @staticmethod
+    def get_icon(subreddit, save_path):
         """
         Saves the icon of the given subreddit to the folder specified by the save path argument.
-        :param subreddit_name: The subreddit that we wish to find the icon of.
+        :param subreddit: The subreddit that we wish to find the icon of.
         :param save_path: The folder we should save the icon to.
-        :return: None
         """
-        subreddit = self.reddit.subreddit(subreddit_name)
-
         # If the subreddit has an icon.
         if subreddit.icon_img != "":
             # Save the icon to the icons folder.

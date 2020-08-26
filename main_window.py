@@ -14,7 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
     """
     Class for creating the main window that our reddit desktop background desktop app will run in.
     """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, background_changer, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
@@ -32,7 +32,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.updateButton.clicked.connect(self.update_subreddit)
         self.deleteButton.clicked.connect(self.delete)
 
-        self.settings_dialog = SettingsDialog()
+        # Used to restart the timer if the change frequency was changed in the settings.
+        self.background_changer = background_changer
+
+        self.settings_dialog = SettingsDialog(background_changer)
         self.settingsButton.clicked.connect(self.settings_dialog.show)
 
         # Updating the shown subreddit settings in the UI when a subreddit from the listView is selected.
@@ -66,13 +69,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.timeComboBox.setCurrentIndex(0)
             self.numberSpinBox.setValue(0)
 
-            # Adding the images corresponding to the new subreddit to the image folder.
+            # Adding the images and icon corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
             worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "data/images/")
             self.threadpool.start(worker)
-
-            # Adding the subreddit icon to the icon folder.
-            self.model.get_icon(name, "data/icons/")
 
             self.save_subreddits()
 
@@ -107,13 +107,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.model.subreddits[index.row()] = (new_name, new_time_limit, new_number_of_images)
             self.model.dataChanged.emit(index, index)
 
-            # Adding the images corresponding to the new subreddit to the image folder.
+            # Adding the images and icon corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
             worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "data/images/")
             self.threadpool.start(worker)
-
-            # Adding the subreddit icon to the icon folder.
-            self.model.get_icon(new_name, "data/icons/")
 
             self.save_subreddits()
 

@@ -22,7 +22,7 @@ def main():
     # We use the absolute path since it is required when changing the background on windows.
     background_changer = BackgroundChanger()
 
-    main_window = MainWindow()
+    main_window = MainWindow(background_changer)
     system_tray = SystemTray(background_changer, main_window, app)
 
     main_window.show()

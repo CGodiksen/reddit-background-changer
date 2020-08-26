@@ -27,6 +27,9 @@ class BackgroundChanger:
 
     def change_background(self):
         """Changes the background of the desktop to a random image from the self.image_dict folder."""
+        # Loading the most recent settings.
+        self.settings.load_settings()
+
         # Wrapping in a try-except to handle invalid/broken images and the case where there are no images in the folder.
         try:
             # Choosing a random image from the folder containing all possible backgrounds.
@@ -41,12 +44,3 @@ class BackgroundChanger:
             self.timer.start(self.settings.change_frequency * 60000)
         except Exception as e:
             print("Background changer: " + str(e))
-
-    def set_interval(self, interval_minutes):
-        """Setter function for the interval instance variable that restarts the timer with the new interval."""
-        # Multiplied by 60000 to convert minutes to ms.
-        self.settings.change_frequency = interval_minutes
-        self.timer.start(self.settings.change_frequency * 60000)
-
-        # Saving the changed settings to the settings file.
-        self.settings.save_settings()
