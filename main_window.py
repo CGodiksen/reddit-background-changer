@@ -14,7 +14,7 @@ class MainWindow(QtWidgets.QMainWindow):
     """
     Class for creating the main window that our reddit desktop background desktop app will run in.
     """
-    def __init__(self, background_changer, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
@@ -38,17 +38,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # Updating the shown subreddit settings in the UI when a subreddit from the listView is selected.
         self.subredditView.selectionModel().selectionChanged.connect(self.update_settings)
 
-        # Setting up the background changer that will change the background every x seconds, specified by the interval.
-        self.background_changer = background_changer
-
         # Setting up the thread pool that will handle the threads that are created when getting images.
         self.threadpool = QThreadPool()
 
         # Number that keeps track of how many workers that are currently getting images from reddit.
         self.getting_images = 0
-
-        # The filename of the image that is currently the desktop background.
-        self.current_background = ""
 
     def add(self):
         """

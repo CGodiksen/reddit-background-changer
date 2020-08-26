@@ -58,7 +58,7 @@ class SystemTray:
         Changing the background manually and adding the old background image to the blacklist. We assume that the
         background was changed manually due to the background being undesirable.
         """
-        initial_background = self.main_window.current_background
+        initial_background = self.background_changer.current_background
 
         if initial_background != "":
             # Removing the initial image from the folder containing the possible backgrounds.
@@ -68,4 +68,4 @@ class SystemTray:
             self.settings.blacklist.append(initial_background)
             self.settings.save_settings()
 
-        self.main_window.current_background = self.background_changer.change_background()
+        self.background_changer.change_background()
