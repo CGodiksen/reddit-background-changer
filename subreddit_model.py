@@ -167,12 +167,12 @@ class SubredditModel(QtCore.QAbstractListModel):
         """
         # Deleting the images from the background image pool.
         for filename in os.listdir("data/images/"):
-            if filename[:-14] == subreddit_name:
+            if filename[:-14].lower() == subreddit_name.lower():
                 os.remove(os.path.join("data/images/", filename))
 
         # Deleting the icon from the icon folder.
         for filename in os.listdir("data/icons/"):
-            if filename[:-4] == subreddit_name:
+            if filename[:-4].lower() == subreddit_name.lower():
                 os.remove(os.path.join("data/icons/", filename))
 
     @staticmethod
