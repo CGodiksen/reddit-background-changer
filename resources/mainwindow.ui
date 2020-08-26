@@ -274,6 +274,12 @@ color: rgb(255, 255, 255);</string>
              <pointsize>11</pointsize>
             </font>
            </property>
+           <property name="currentIndex">
+            <number>0</number>
+           </property>
+           <property name="maxVisibleItems">
+            <number>10</number>
+           </property>
            <item>
             <property name="text">
              <string>Now</string>
@@ -347,7 +353,7 @@ color: rgb(255, 255, 255);</string>
             </font>
            </property>
            <property name="maximum">
-            <number>999</number>
+            <number>100</number>
            </property>
           </widget>
          </item>
