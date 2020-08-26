@@ -4,6 +4,7 @@ import urllib.request
 from shutil import copyfile
 
 import praw
+import prawcore
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 
@@ -66,15 +67,24 @@ class SubredditModel(QtCore.QAbstractListModel):
         the function saves them to the specified folder.
 
         :param save_path: The path to the folder in which we save the images.
-        :param subreddit_config: The subreddit configuration that describes the subreddit we should search, the time limit
-        the search should be within and the amount of images we should find.
+        :param subreddit_config: The subreddit configuration that describes the subreddit we should search, the time
+        limit the search should be within and the amount of images we should find.
         """
         # Loading the most recent settings.
         self.settings.load_settings()
 
+        # Pulling the information from the configuration to increase readability.
+        name, time_limit, number_of_images = subreddit_config
+
         # Creating the reddit instance using the secret information.
         reddit = praw.Reddit(client_id=self.settings.client_id, client_secret=self.settings.client_secret,
                              user_agent=self.settings.user_agent)
+
+        # Stopping further execution of the method if the subreddit does not exist.
+        if not self.check_subreddit_exists(reddit, subreddit_config):
+            return
+
+        subreddit = reddit.subreddit(name)
 
         # Incrementing getting_images since one more worker is getting images.
         self.main_window.getting_images += 1
@@ -86,15 +96,10 @@ class SubredditModel(QtCore.QAbstractListModel):
         self.main_window.deleteButton.setFlat(True)
         self.main_window.updateButton.setFlat(True)
 
-        # Pulling the information from the configuration to increase readability.
-        name, time_limit, number_of_images = subreddit_config
-
         # Converting the time limit into the corresponding time filter that can be used in top().
         time_limit = self.convert_time_limit(time_limit)
 
-        subreddit = reddit.subreddit(name)
         image_counter = 0
-
         for submission in subreddit.top(time_filter=time_limit, limit=1000):
             # Ensuring that we only retrieve the requested amount of images.
             if image_counter == number_of_images:
@@ -201,3 +206,28 @@ class SubredditModel(QtCore.QAbstractListModel):
         # If not we just save the subreddit icon as the default icon.
         else:
             copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
+
+    def check_subreddit_exists(self, reddit, subreddit_config):
+        """
+        Checks if the given subreddit exists. If not it removes the subreddit from the internal model.
+
+        :param reddit: The praw reddit instance used to access reddit.
+        :param subreddit_config: The subreddit configuration that describes the subreddit we should search for.
+        :return: True if the subreddits exists, otherwise false.
+        """
+        # Pulling the subreddit name from the configuration.
+        name, _, _ = subreddit_config
+
+        try:
+            reddit.subreddits.search_by_name(name, exact=True)
+        except prawcore.NotFound as e:
+            print("Subreddit does not exist: " + str(e))
+
+            # Removing the subreddit from the internal model.
+            self.main_window.model.subreddits.remove(subreddit_config)
+            self.main_window.model.layoutChanged.emit()
+            self.main_window.save_subreddits()
+
+            return False
+
+        return True
