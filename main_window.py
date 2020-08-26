@@ -92,11 +92,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # If something is selected.
         if index:
-            # Deleting the images corresponding to the old subreddit configuration from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "data/images/")
-
-            # Deleting the icon corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "data/icons/")
+            # Deleting the images and icon corresponding to the deleted subreddit from the image and icon folders.
+            self.model.delete_images(self.model.subreddits[index.row()][0])
 
             # Getting the new configuration settings.
             new_name = self.subredditEdit.text()
@@ -129,11 +126,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # If something is selected.
         if index:
-            # Deleting the images corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "data/images/")
-
-            # Deleting the icon corresponding to the deleted subreddit from the image folder.
-            self.model.delete_images(self.model.subreddits[index.row()][0], "data/icons/")
+            # Deleting the images and icon corresponding to the deleted subreddit from the image and icon folders.
+            self.model.delete_images(self.model.subreddits[index.row()][0])
 
             # Deleting the subreddit from the internal list model and emitting the layout change.
             del self.model.subreddits[index.row()]

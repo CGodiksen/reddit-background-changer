@@ -153,18 +153,22 @@ class SubredditModel(QtCore.QAbstractListModel):
         return False
 
     @staticmethod
-    def delete_images(subreddit_name, delete_path):
+    def delete_images(subreddit_name):
         """
-        Deletes all images in the folder specified by the delete path that are from the given subreddit.
+        Deletes all images from the background image pool that are from the given subreddit. Also deletes the
+        subreddits icon from the icon folder.
 
-        :param subreddit_name: The subreddit which pictures should be removed from the delete path folder.
-        :param delete_path: The folder in which we should delete the picture.
+        :param subreddit_name: The subreddit specifying what images and which icon that should be deleted.
         """
-        # Iterating through the files in the delete folder.
-        for filename in os.listdir(delete_path):
-            # If the file is from the given subreddit then we delete it.
-            if filename.lower().startswith(subreddit_name.lower()):
-                os.remove(os.path.join(delete_path, filename))
+        # Deleting the images from the background image pool.
+        for filename in os.listdir("data/images/"):
+            if filename[:-14] == subreddit_name:
+                os.remove(os.path.join("data/images/", filename))
+
+        # Deleting the icon from the icon folder.
+        for filename in os.listdir("data/icons/"):
+            if filename[:-4] == subreddit_name:
+                os.remove(os.path.join("data/icons/", filename))
 
     @staticmethod
     def convert_time_limit(time_limit):
