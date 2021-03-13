@@ -5,7 +5,7 @@ import os
 class Settings:
     def __init__(self):
         # If the settings file does not already exist then initialize the settings file.
-        if "settings.json" not in os.listdir("resources"):
+        if "settings.json" not in os.listdir("../resources"):
             self.initialize_file()
 
         self.client_id = ""
@@ -18,7 +18,7 @@ class Settings:
 
     def load_settings(self):
         """Loading the current settings from the settings file."""
-        with open("resources/settings.json", "r") as settings_file:
+        with open("../resources/settings.json", "r") as settings_file:
             settings = json.load(settings_file)
             self.client_id = settings["client_id"]
             self.client_secret = settings["client_secret"]
@@ -28,7 +28,7 @@ class Settings:
 
     def save_settings(self):
         """Saving the current settings to the the settings file"""
-        with open("resources/settings.json", "w") as settings_file:
+        with open("../resources/settings.json", "w") as settings_file:
             json.dump({"client_id": self.client_id,
                        "client_secret": self.client_secret,
                        "user_agent": self.user_agent,
@@ -38,7 +38,7 @@ class Settings:
     @staticmethod
     def initialize_file():
         """Initializes the settings file."""
-        with open("resources/settings.json", "w+") as settings_file:
+        with open("../resources/settings.json", "w+") as settings_file:
             json.dump({"client_id": "",
                        "client_secret": "",
                        "username": "",

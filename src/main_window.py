@@ -5,9 +5,9 @@ import pathlib
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThreadPool
 
-from settings_dialog import SettingsDialog
-from subreddit_model import SubredditModel
-from worker import Worker
+from src.settings_dialog import SettingsDialog
+from src.subreddit_model import SubredditModel
+from src.worker import Worker
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -155,7 +155,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def load_subreddits(self):
         """Simple function that loads the data from the persistent json file into the internal list model."""
-        with open("data/subreddits.json", "r") as subreddit_file:
+        with open("../data/subreddits.json", "r") as subreddit_file:
             data = json.load(subreddit_file)
             self.model.subreddits = data
 
@@ -164,7 +164,7 @@ class MainWindow(QtWidgets.QMainWindow):
         Simple function that saves the current internal list model into the persistent json file. If the json file
         does not exist then the file is created first.
         """
-        with open("data/subreddits.json", "w") as subreddit_file:
+        with open("../data/subreddits.json", "w") as subreddit_file:
             json.dump(self.model.subreddits, subreddit_file)
 
     @staticmethod
@@ -174,9 +174,9 @@ class MainWindow(QtWidgets.QMainWindow):
         that contains the two sub-folders "icons"  and "images". The "data" folder will also contain the "subreddits"
         json file which keeps track of the currently chosen added subreddits.
         """
-        pathlib.Path("data/icons").mkdir(parents=True, exist_ok=True)
-        pathlib.Path("data/images").mkdir(parents=True, exist_ok=True)
+        pathlib.Path("../data/icons").mkdir(parents=True, exist_ok=True)
+        pathlib.Path("../data/images").mkdir(parents=True, exist_ok=True)
 
-        if "subreddits.json" not in os.listdir("data"):
-            with open("data/subreddits.json", "w+") as subreddit_file:
+        if "subreddits.json" not in os.listdir("../data"):
+            with open("../data/subreddits.json", "w+") as subreddit_file:
                 json.dump([], subreddit_file)

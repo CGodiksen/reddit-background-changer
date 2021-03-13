@@ -4,7 +4,7 @@ import random
 
 from PyQt5.QtCore import QTimer
 
-from settings import Settings
+from src.settings import Settings
 
 
 class BackgroundChanger:
@@ -13,7 +13,7 @@ class BackgroundChanger:
         self.current_background = ""
 
         # The path to the folder that contains the images that can be picked as the desktop background.
-        self.image_folder = os.path.abspath("data/images") + "/"
+        self.image_folder = os.path.abspath("../data/images") + "/"
 
         self.settings = Settings()
 

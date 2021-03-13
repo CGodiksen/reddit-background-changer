@@ -1,4 +1,4 @@
-from settings import Settings
+from src.settings import Settings
 
 from PyQt5 import QtWidgets, uic
 

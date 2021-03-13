@@ -3,7 +3,7 @@ import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from settings import Settings
+from src.settings import Settings
 
 
 class SystemTray:

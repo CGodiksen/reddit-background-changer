@@ -8,7 +8,7 @@ import prawcore
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 
-from settings import Settings
+from src.settings import Settings
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -48,7 +48,7 @@ class SubredditModel(QtCore.QAbstractListModel):
         # Inserting the subreddit icon before the name in each row.
         if role == Qt.DecorationRole:
             # Iterating through the icons.
-            for filename in os.listdir("data/icons/"):
+            for filename in os.listdir("../data/icons/"):
                 # When we find the correct icon for the subreddit we return a scaled version.
                 if filename.lower().startswith(name.lower()):
                     icon = QtGui.QImage("data/icons/" + filename)
@@ -117,7 +117,7 @@ class SubredditModel(QtCore.QAbstractListModel):
                 continue
 
         # Adding the subreddit icon to the icon folder.
-        self.get_icon(subreddit, "data/icons/")
+        self.get_icon(subreddit, "../data/icons/")
 
         self.main_window.getting_images -= 1
 
@@ -166,14 +166,14 @@ class SubredditModel(QtCore.QAbstractListModel):
         :param subreddit_name: The subreddit specifying what images and which icon that should be deleted.
         """
         # Deleting the images from the background image pool.
-        for filename in os.listdir("data/images/"):
+        for filename in os.listdir("../data/images/"):
             if filename[:-14].lower() == subreddit_name.lower():
-                os.remove(os.path.join("data/images/", filename))
+                os.remove(os.path.join("../data/images/", filename))
 
         # Deleting the icon from the icon folder.
-        for filename in os.listdir("data/icons/"):
+        for filename in os.listdir("../data/icons/"):
             if filename[:-4].lower() == subreddit_name.lower():
-                os.remove(os.path.join("data/icons/", filename))
+                os.remove(os.path.join("../data/icons/", filename))
 
     @staticmethod
     def convert_time_limit(time_limit):
@@ -205,7 +205,7 @@ class SubredditModel(QtCore.QAbstractListModel):
             urllib.request.urlretrieve(subreddit.icon_img, save_path + subreddit.display_name + ".png")
         # If not we just save the subreddit icon as the default icon.
         else:
-            copyfile("resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
+            copyfile("../resources/default_subreddit_icon.png", save_path + subreddit.display_name + ".png")
 
     def check_subreddit_exists(self, reddit, subreddit_config):
         """
