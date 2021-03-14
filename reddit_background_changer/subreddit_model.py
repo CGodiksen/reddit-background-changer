@@ -8,7 +8,7 @@ import prawcore
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 
-from src.settings import Settings
+from reddit_background_changer.settings import Settings
 
 
 class SubredditModel(QtCore.QAbstractListModel):
@@ -51,7 +51,7 @@ class SubredditModel(QtCore.QAbstractListModel):
             for filename in os.listdir("../data/icons/"):
                 # When we find the correct icon for the subreddit we return a scaled version.
                 if filename.lower().startswith(name.lower()):
-                    icon = QtGui.QImage("data/icons/" + filename)
+                    icon = QtGui.QImage("../data/icons/" + filename)
                     return icon.scaled(25, 25)
 
     def rowCount(self, parent=None, *args, **kwargs):

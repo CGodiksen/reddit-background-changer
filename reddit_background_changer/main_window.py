@@ -5,9 +5,9 @@ import pathlib
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtCore import QThreadPool
 
-from src.settings_dialog import SettingsDialog
-from src.subreddit_model import SubredditModel
-from src.worker import Worker
+from reddit_background_changer.settings_dialog import SettingsDialog
+from reddit_background_changer.subreddit_model import SubredditModel
+from reddit_background_changer.worker import Worker
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -18,7 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi("resources/mainwindow.ui", self)
+        uic.loadUi("../resources/mainwindow.ui", self)
 
         self.create_storage_setup()
 
@@ -71,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Adding the images and icon corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
-            worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "data/images/")
+            worker = Worker(self.model.get_images, (name, time_limit, number_of_images), "../data/images/")
             self.threadpool.start(worker)
 
             self.save_subreddits()
@@ -106,7 +106,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Adding the images and icon corresponding to the new subreddit to the image folder.
             # This is done in a new thread to ensure that the GUI is responsive even when getting images.
-            worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "data/images/")
+            worker = Worker(self.model.get_images, (new_name, new_time_limit, new_number_of_images), "../data/images/")
             self.threadpool.start(worker)
 
             self.save_subreddits()

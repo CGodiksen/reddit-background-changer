@@ -4,7 +4,7 @@ import random
 
 from PyQt5.QtCore import QTimer
 
-from src.settings import Settings
+from reddit_background_changer.settings import Settings
 
 
 class BackgroundChanger:

@@ -3,9 +3,9 @@ import sys
 from PyQt5 import QtWidgets, QtGui
 from PyQt5.QtWinExtras import QtWin
 
-from src.background_changer import BackgroundChanger
-from src.main_window import MainWindow
-from src.system_tray import SystemTray
+from reddit_background_changer.background_changer import BackgroundChanger
+from reddit_background_changer.main_window import MainWindow
+from reddit_background_changer.system_tray import SystemTray
 
 
 def main():

@@ -3,7 +3,7 @@ import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 
-from src.settings import Settings
+from reddit_background_changer.settings import Settings
 
 
 class SystemTray:
@@ -21,7 +21,7 @@ class SystemTray:
 
         # Setting up the system tray icon itself.
         self.tray = QSystemTrayIcon()
-        self.tray.setIcon(QIcon("resources/reddit_icon.ico"))
+        self.tray.setIcon(QIcon("../resources/reddit_icon.ico"))
         self.tray.setVisible(True)
 
         # Creating the menu.
@@ -62,7 +62,7 @@ class SystemTray:
 
         if initial_background != "":
             # Removing the initial image from the folder containing the possible backgrounds.
-            os.remove("data/images/" + initial_background)
+            os.remove("../data/images/" + initial_background)
 
             # Adding the initial image to the blacklist and updating the settings with the new blacklist.
             self.settings.blacklist.append(initial_background)

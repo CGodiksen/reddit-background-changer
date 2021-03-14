@@ -1,4 +1,4 @@
-from src.settings import Settings
+from reddit_background_changer.settings import Settings
 
 from PyQt5 import QtWidgets, uic
 
@@ -8,7 +8,7 @@ class SettingsDialog(QtWidgets.QDialog):
         super(SettingsDialog, self).__init__(*args, **kwargs)
 
         # Load the UI Page.
-        uic.loadUi("resources/settingsdialog.ui", self)
+        uic.loadUi("../resources/settingsdialog.ui", self)
 
         # Used to restart the timer if the change frequency was changed.
         self.background_changer = background_changer
