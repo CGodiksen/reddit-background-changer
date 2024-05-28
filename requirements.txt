@@ -11,7 +11,7 @@ PyQt5==5.14.1
 PyQt5-sip==12.7.1
 PyQt5-stubs==5.14.1.0
 pywin32-ctypes==0.2.0
-requests==2.31.0
+requests==2.32.0
 six==1.14.0
 update-checker==0.16
 urllib3>=1.26.5
